@@ -1,5 +1,6 @@
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow
+from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
 import sys
 
@@ -20,22 +21,28 @@ class AppWindow(QMainWindow):
         #self.setWindowIcon(QIcon('python.png'))
 
         """ initialize buttons"""
-        btn1 = QtWidgets.QPushButton("Greet user", self)
-        btn1.setGeometry(250, 50, 100, 50)
-        btn1.clicked.connect(self.btn1_clicked)
-        btn2 = QtWidgets.QPushButton("Exit app", self)
-        btn2.setStyleSheet('color:red')
-        btn2.setGeometry(250, 300, 100, 50)
-        btn2.clicked.connect(self.btn2_clicked)
+        self.btn1 = QtWidgets.QPushButton("Greet user", self)
+        self.btn1.setGeometry(250, 50, 100, 50)
+        self.btn1.clicked.connect(self.btn1_clicked)
+        self.btn2 = QtWidgets.QPushButton("Exit app", self)
+        self.btn2.setStyleSheet('color:red')
+        self.btn2.setGeometry(250, 300, 100, 50)
+        self.btn2.clicked.connect(self.btn2_clicked)
 
         """initialize labels"""
-        lbl1 = QtWidgets.QLabel(self)
-        lbl1.setText("There's nothing interesting here")
-        lbl1.adjustSize()
-        lbl1.move(200, 120)
+        self.lbl1 = QtWidgets.QLabel(self)
+        self.lbl1.setAlignment(Qt.AlignCenter)
+        self.lbl1.setText("Click the button above to see the message!")
+        self.lbl1.adjustSize()
+        self.lbl1.move(180, 120)
+
+        """initialize text field"""
+        self.text1 = QtWidgets.QLineEdit(self)
+        self.text1.setGeometry(250, 150, 100, 50)
+        self.text1.setAlignment(Qt.AlignCenter)
 
     def btn1_clicked(self):
-        print("Hello user!")
+        self.text1.setText("Hello user!")
 
     def btn2_clicked(self):
         sys.exit()
