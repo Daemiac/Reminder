@@ -3,6 +3,8 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHB
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
 import sys
+import requests
+import random
 
 
 class AppWindow(QWidget):
@@ -72,10 +74,10 @@ class QuestInfoTab(QWidget):
         self.width = 700
         self.height = 500
 
-        self.lbl1 = QtWidgets.QLabel(self)
-        self.lbl1.setAlignment(Qt.AlignCenter)
-        self.lbl1.setText("Details of your quest")
-        self.lbl1.adjustSize()
+        self.quest_details = QtWidgets.QLabel(self)
+        self.quest_details.setAlignment(Qt.AlignCenter)
+        self.quest_details.setText("Details of your quest")
+        self.quest_details.adjustSize()
 
         self.quest_text = QtWidgets.QTextBrowser(self)
         self.quest_text.append("Quest info here!")
@@ -86,7 +88,7 @@ class QuestInfoTab(QWidget):
 
     def set_layout(self):
         vbox = QVBoxLayout()
-        vbox.addWidget(self.lbl1)
+        vbox.addWidget(self.quest_details)
         vbox.stretch(1)
         vbox.addWidget(self.quest_text)
         self.setLayout(vbox)
@@ -100,12 +102,14 @@ class BottomWidget(QWidget):
 
         self.mot_quote = QtWidgets.QLabel(self)
         self.mot_quote.setAlignment(Qt.AlignCenter)
-        self.mot_quote.setText("Motivational quote")
+        self.get_motivational_quote()
+        self.mot_quote.setStyleSheet('font-weight: bold; font-family: Courier; font-size: 8pt; border: 1px solid black;')
         self.mot_quote.adjustSize()
 
         self.close_button = QtWidgets.QPushButton("Close app", self)
-        self.close_button.setStyleSheet('color:red')
-        # self.btn2.setGeometry(250, 300, 100, 50)
+        self.close_button.setStyleSheet('font-weight: bold; color:red')
+        self.close_button.setFixedWidth(100)
+        self.close_button.setFixedHeight(30)
         self.close_button.clicked.connect(self.close_button_clicked)
 
         self.set_layout()
@@ -113,11 +117,22 @@ class BottomWidget(QWidget):
     def set_layout(self):
         hbox = QHBoxLayout()
         hbox.addWidget(self.mot_quote)
-        hbox.stretch(1)
+        #hbox.stretch(1)
         hbox.addWidget(self.close_button)
         self.setLayout(hbox)
 
-    def close_button_clicked(self):
+    def get_motivational_quote(self):
+        url = "https://type.fit/api/quotes?fbclid=IwAR066CVqn2qdvUIEBui3J2r-xre3ZcaQrfKJkqJmf4Drj2FH-qgW1DgcD4c"
+        response = requests.get(url)
+        if response.status_code == 200:
+            quote_list = response.json()
+            chosen_quote = random.choice(quote_list)
+            self.mot_quote.setText(chosen_quote['text'] + " - " + chosen_quote['author'])
+        else:
+            self.mot_quote.setText("Be better than yesterday and worse than tomorrow! - Daemiac")
+
+    @staticmethod
+    def close_button_clicked():
         sys.exit()
 
 
