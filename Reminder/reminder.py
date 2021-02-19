@@ -1,10 +1,13 @@
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QIcon
+from PyQt5.QtGui import QIcon, QFont
 import sys
 import requests
 import random
+
+STYLE_SHEET = {"quest_list_label": "font-weight: bold; font-family: Verdana; font-style: italic; font-size: 10pt",
+               'mot_quote': 'font-weight: bold; font-family: Courier; font-size: 8pt; border: 1px solid black;'}
 
 
 class AppWindow(QWidget):
@@ -51,6 +54,7 @@ class QuestListTab(QWidget):
         self.quest_list_label = QtWidgets.QLabel(self)
         self.quest_list_label.setAlignment(Qt.AlignCenter)
         self.quest_list_label.setText("List of your current tasks")
+        self.quest_list_label.setStyleSheet(STYLE_SHEET['quest_list_label'])
         self.quest_list_label.adjustSize()
 
         self.quest_list = QtWidgets.QListWidget(self)
@@ -76,7 +80,8 @@ class QuestInfoTab(QWidget):
 
         self.quest_details = QtWidgets.QLabel(self)
         self.quest_details.setAlignment(Qt.AlignCenter)
-        self.quest_details.setText("Details of your quest")
+        self.quest_details.setText("Details of your task")
+        self.quest_details.setFont(QFont('Verdana', 10))
         self.quest_details.adjustSize()
 
         self.quest_text = QtWidgets.QTextBrowser(self)
@@ -103,7 +108,7 @@ class BottomWidget(QWidget):
         self.mot_quote = QtWidgets.QLabel(self)
         self.mot_quote.setAlignment(Qt.AlignCenter)
         self.get_motivational_quote()
-        self.mot_quote.setStyleSheet('font-weight: bold; font-family: Courier; font-size: 8pt; border: 1px solid black;')
+        self.mot_quote.setStyleSheet(STYLE_SHEET['mot_quote'])
         self.mot_quote.adjustSize()
 
         self.close_button = QtWidgets.QPushButton("Close app", self)
