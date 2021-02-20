@@ -6,9 +6,12 @@ import sys
 import requests
 import random
 
-STYLE_SHEET = {'quest_list_label': 'font-weight: bold; font-family: Verdana; color: blue; font-size: 10pt',
-               'quest_details': 'font-weight: bold; font-family: Verdana; font-size: 10pt',
-               'mot_quote': 'font-weight: bold; font-family: Courier; font-size: 8pt; border: 1px solid black;',
+STYLE_SHEET = {'app_window': 'background-color: #DCDCDC;',
+               'quest_list_label': 'font-weight: bold; font-family: Verdana; color: #8B0000; font-size: 11pt',
+               'quest_details': 'font-weight: bold; font-family: Verdana; color: #8B0000; font-size: 11pt',
+               'quest_info': 'background-color: white; font-family: Courier; font-style: italic; font-size: 10pt',
+               'mot_quote': 'background-color: #800000; color: white; font-weight: bold; font-family:'
+                            ' Courier; font-size: 8pt; border: 1px solid black;',
                'close_button': 'font-weight: bold; color:red;'}
 
 TASKS = {'Back to home': 'Going back to home for a weekend',
@@ -16,40 +19,45 @@ TASKS = {'Back to home': 'Going back to home for a weekend',
          'Clean your room': 'Your environment is messy. Dustin\' time'}
 
 
-class AppWindow(QWidget):
+class AppWindow(QMainWindow):
+    """ Main window of the app """
     def __init__(self):
         super().__init__()
+        # Set main window's properties
         self.title = "Reminder alpha ver"
         self.x_position = 400
         self.y_position = 300
         self.width = 1100
         self.height = 600
+        self.setWindowTitle(self.title)
+        self.setGeometry(self.x_position, self.y_position, self.width, self.height)
+        self.setStyleSheet(STYLE_SHEET['app_window'])
 
+        # Set the central widget and general layout
+        self.generalLayout = QVBoxLayout()
+        self._centralWidget = QWidget(self)
+        self.setCentralWidget(self._centralWidget)
+        self._centralWidget.setLayout(self.generalLayout)
+
+        # Create child widgets
         self.first_widget = QuestListTab()
         self.second_widget = QuestInfoTab()
         self.third_widget = BottomWidget()
 
-        self.init_ui()
+        self.create_view()
 
-        '''signal transfering methods'''
+        # signal transfer methods
         self.first_widget.quest_info_update.connect(self.second_widget.update_quest_info)
 
-    def init_ui(self):
-
+    def create_view(self):
         """ layout objects """
-        vbox = QVBoxLayout()
-        hbox = QHBoxLayout()
-        hbox.addWidget(self.first_widget)
-        hbox.addStretch(1)
-        hbox.addWidget(self.second_widget)
-        vbox.addLayout(hbox)
-        vbox.addStretch(1)
-        vbox.addWidget(self.third_widget)
-        self.setLayout(vbox)
-
-        self.setWindowTitle(self.title)
-        self.setGeometry(self.x_position, self.y_position, self.width, self.height)
-        # self.setWindowIcon(QIcon('python.png'))
+        minor_layout = QHBoxLayout()
+        minor_layout.addWidget(self.first_widget)
+        minor_layout.addStretch(1)
+        minor_layout.addWidget(self.second_widget)
+        self.generalLayout.addLayout(minor_layout)
+        self.generalLayout.addStretch(1)
+        self.generalLayout.addWidget(self.third_widget)
 
 
 class QuestListTab(QWidget):
@@ -60,50 +68,53 @@ class QuestListTab(QWidget):
         super().__init__()
         self.width = 400
         self.height = 500
+        self.main_layout = QVBoxLayout()
+        # Create widgets
+        self.create_label()
+        self.create_list_widget()
+        self.create_buttons()
 
-        self.task_list = ["My first task", "My second task", "My third task"]
+        self.setLayout(self.main_layout)
 
+    def create_label(self):
         self.quest_list_label = QtWidgets.QLabel(self)
         self.quest_list_label.setAlignment(Qt.AlignCenter)
         self.quest_list_label.setText("List of your current tasks")
         self.quest_list_label.setStyleSheet(STYLE_SHEET['quest_list_label'])
         self.quest_list_label.adjustSize()
+        self.main_layout.addWidget(self.quest_list_label)
 
+    def create_list_widget(self):
         self.quest_list = QtWidgets.QListWidget(self)
         for task in TASKS:
             self.quest_list.addItem(task)
         self.quest_list.setMinimumSize(250, 400)
+        self.quest_list.setStyleSheet('background-color: #BDB76B; color: #B22222; font-weight: bold;')
         self.quest_list.itemClicked.connect(self.show_quest_info)
+        self.main_layout.addWidget(self.quest_list)
 
-        self.add_button = QtWidgets.QPushButton("Add quest", self)
+    def create_buttons(self):
+        button_layout = QHBoxLayout()
+        self.add_button = QtWidgets.QPushButton("Add task", self)
         self.add_button.setStyleSheet(STYLE_SHEET['close_button'])
         self.add_button.setFixedWidth(100)
         self.add_button.setFixedHeight(30)
+        button_layout.addWidget(self.add_button)
 
-        self.del_button = QtWidgets.QPushButton("Delete quest", self)
+        self.del_button = QtWidgets.QPushButton("Change details", self)
         self.del_button.setStyleSheet(STYLE_SHEET['close_button'])
         self.del_button.setFixedWidth(100)
         self.del_button.setFixedHeight(30)
+        button_layout.addWidget(self.del_button)
 
-        self.arch_button = QtWidgets.QPushButton("Archive quest", self)
+        self.arch_button = QtWidgets.QPushButton("Archive task", self)
         self.arch_button.setStyleSheet(STYLE_SHEET['close_button'])
         self.arch_button.setFixedWidth(100)
         self.arch_button.setFixedHeight(30)
+        button_layout.addWidget(self.arch_button)
 
-        self.set_layout()
-
-    def set_layout(self):
-        vbox = QVBoxLayout()
-        hbox = QHBoxLayout()
-        vbox.addWidget(self.quest_list_label)
-        vbox.addWidget(self.quest_list)
-        hbox.addWidget(self.add_button)
-        hbox.addWidget(self.del_button)
-        hbox.addWidget(self.arch_button)
-        vbox.addStretch(1)
-        vbox.addLayout(hbox)
-
-        self.setLayout(vbox)
+        self.main_layout.addStretch(1)
+        self.main_layout.addLayout(button_layout)
 
     def show_quest_info(self, item):
         self.quest_info_update.emit(str(item.text()))
@@ -114,26 +125,31 @@ class QuestInfoTab(QWidget):
         super().__init__()
         self.width = 700
         self.height = 500
+        self.setFixedWidth(self.width)
+        self.setFixedHeight(self.height)
 
+        self.main_layout = QVBoxLayout()
+        # Create widgets
+        self.create_label()
+        self.create_info_widget()
+
+        self.setLayout(self.main_layout)
+
+    def create_label(self):
         self.quest_details = QtWidgets.QLabel(self)
         self.quest_details.setAlignment(Qt.AlignCenter)
         self.quest_details.setText("Details of your task")
-        self.quest_details.setFont(QFont('Verdana', 10))
+        self.quest_details.setStyleSheet(STYLE_SHEET['quest_details'])
         self.quest_details.adjustSize()
 
+        self.main_layout.addWidget(self.quest_details)
+
+    def create_info_widget(self):
         self.quest_text = QtWidgets.QTextBrowser(self)
         self.quest_text.append("Quest info here!")
+        self.quest_text.setStyleSheet(STYLE_SHEET['quest_info'])
 
-        self.setFixedWidth(self.width)
-        self.setFixedHeight(self.height)
-        self.set_layout()
-
-    def set_layout(self):
-        vbox = QVBoxLayout()
-        vbox.addWidget(self.quest_details)
-        vbox.stretch(1)
-        vbox.addWidget(self.quest_text)
-        self.setLayout(vbox)
+        self.main_layout.addWidget(self.quest_text)
 
     def update_quest_info(self, message):
         self.quest_text.setText(TASKS[message])
@@ -145,19 +161,29 @@ class BottomWidget(QWidget):
         self.width = 700
         self.height = 50
 
+        self.main_layout = QHBoxLayout()
+        self.create_motivational_quote()
+        self.create_close_button()
+
+        self.setLayout(self.main_layout)
+
+    def create_motivational_quote(self):
         self.mot_quote = QtWidgets.QLabel(self)
         self.mot_quote.setAlignment(Qt.AlignCenter)
         self.get_motivational_quote()
         self.mot_quote.setStyleSheet(STYLE_SHEET['mot_quote'])
         self.mot_quote.adjustSize()
 
+        self.main_layout.addWidget(self.mot_quote)
+
+    def create_close_button(self):
         self.close_button = QtWidgets.QPushButton("Close app", self)
         self.close_button.setStyleSheet(STYLE_SHEET['close_button'])
         self.close_button.setFixedWidth(100)
         self.close_button.setFixedHeight(30)
         self.close_button.clicked.connect(self.close_button_clicked)
 
-        self.set_layout()
+        self.main_layout.addWidget(self.close_button)
 
     def set_layout(self):
         hbox = QHBoxLayout()
@@ -174,6 +200,8 @@ class BottomWidget(QWidget):
             chosen_quote = random.choice(quote_list)
             while len(chosen_quote['text']) > 90:
                 chosen_quote = random.choice(quote_list)
+            if chosen_quote['author'] is None:
+                chosen_quote['author'] = 'Anonymous'
             self.mot_quote.setText(chosen_quote['text'] + " - " + chosen_quote['author'])
         else:
             self.mot_quote.setText("Be better than yesterday and worse than tomorrow! - Daemiac")
