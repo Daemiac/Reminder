@@ -1,4 +1,4 @@
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon, QFont
@@ -6,8 +6,14 @@ import sys
 import requests
 import random
 
-STYLE_SHEET = {"quest_list_label": "font-weight: bold; font-family: Verdana; font-style: italic; font-size: 10pt",
-               'mot_quote': 'font-weight: bold; font-family: Courier; font-size: 8pt; border: 1px solid black;'}
+STYLE_SHEET = {'quest_list_label': 'font-weight: bold; font-family: Verdana; color: blue; font-size: 10pt',
+               'quest_details': 'font-weight: bold; font-family: Verdana; font-size: 10pt',
+               'mot_quote': 'font-weight: bold; font-family: Courier; font-size: 8pt; border: 1px solid black;',
+               'close_button': 'font-weight: bold; color:red;'}
+
+TASKS = {'Back to home': 'Going back to home for a weekend',
+         'Buy potatoes': 'You are short on potatoes. You can\'t make french fries without them!',
+         'Clean your room': 'Your environment is messy. Dustin\' time'}
 
 
 class AppWindow(QWidget):
@@ -25,13 +31,16 @@ class AppWindow(QWidget):
 
         self.init_ui()
 
+        '''signal transfering methods'''
+        self.first_widget.quest_info_update.connect(self.second_widget.update_quest_info)
+
     def init_ui(self):
 
         """ layout objects """
         vbox = QVBoxLayout()
         hbox = QHBoxLayout()
         hbox.addWidget(self.first_widget)
-        hbox.stretch(1)
+        hbox.addStretch(1)
         hbox.addWidget(self.second_widget)
         vbox.addLayout(hbox)
         vbox.addStretch(1)
@@ -44,6 +53,9 @@ class AppWindow(QWidget):
 
 
 class QuestListTab(QWidget):
+
+    quest_info_update = QtCore.pyqtSignal(str)
+
     def __init__(self):
         super().__init__()
         self.width = 400
@@ -58,18 +70,43 @@ class QuestListTab(QWidget):
         self.quest_list_label.adjustSize()
 
         self.quest_list = QtWidgets.QListWidget(self)
-        for task in self.task_list:
+        for task in TASKS:
             self.quest_list.addItem(task)
-        self.quest_list.adjustSize()
+        self.quest_list.setMinimumSize(250, 400)
+        self.quest_list.itemClicked.connect(self.show_quest_info)
+
+        self.add_button = QtWidgets.QPushButton("Add quest", self)
+        self.add_button.setStyleSheet(STYLE_SHEET['close_button'])
+        self.add_button.setFixedWidth(100)
+        self.add_button.setFixedHeight(30)
+
+        self.del_button = QtWidgets.QPushButton("Delete quest", self)
+        self.del_button.setStyleSheet(STYLE_SHEET['close_button'])
+        self.del_button.setFixedWidth(100)
+        self.del_button.setFixedHeight(30)
+
+        self.arch_button = QtWidgets.QPushButton("Archive quest", self)
+        self.arch_button.setStyleSheet(STYLE_SHEET['close_button'])
+        self.arch_button.setFixedWidth(100)
+        self.arch_button.setFixedHeight(30)
 
         self.set_layout()
 
     def set_layout(self):
         vbox = QVBoxLayout()
+        hbox = QHBoxLayout()
         vbox.addWidget(self.quest_list_label)
-        vbox.stretch(1)
         vbox.addWidget(self.quest_list)
+        hbox.addWidget(self.add_button)
+        hbox.addWidget(self.del_button)
+        hbox.addWidget(self.arch_button)
+        vbox.addStretch(1)
+        vbox.addLayout(hbox)
+
         self.setLayout(vbox)
+
+    def show_quest_info(self, item):
+        self.quest_info_update.emit(str(item.text()))
 
 
 class QuestInfoTab(QWidget):
@@ -98,6 +135,9 @@ class QuestInfoTab(QWidget):
         vbox.addWidget(self.quest_text)
         self.setLayout(vbox)
 
+    def update_quest_info(self, message):
+        self.quest_text.setText(TASKS[message])
+
 
 class BottomWidget(QWidget):
     def __init__(self):
@@ -112,7 +152,7 @@ class BottomWidget(QWidget):
         self.mot_quote.adjustSize()
 
         self.close_button = QtWidgets.QPushButton("Close app", self)
-        self.close_button.setStyleSheet('font-weight: bold; color:red')
+        self.close_button.setStyleSheet(STYLE_SHEET['close_button'])
         self.close_button.setFixedWidth(100)
         self.close_button.setFixedHeight(30)
         self.close_button.clicked.connect(self.close_button_clicked)
@@ -122,7 +162,7 @@ class BottomWidget(QWidget):
     def set_layout(self):
         hbox = QHBoxLayout()
         hbox.addWidget(self.mot_quote)
-        #hbox.stretch(1)
+        hbox.stretch(1)
         hbox.addWidget(self.close_button)
         self.setLayout(hbox)
 
@@ -132,6 +172,8 @@ class BottomWidget(QWidget):
         if response.status_code == 200:
             quote_list = response.json()
             chosen_quote = random.choice(quote_list)
+            while len(chosen_quote['text']) > 90:
+                chosen_quote = random.choice(quote_list)
             self.mot_quote.setText(chosen_quote['text'] + " - " + chosen_quote['author'])
         else:
             self.mot_quote.setText("Be better than yesterday and worse than tomorrow! - Daemiac")
