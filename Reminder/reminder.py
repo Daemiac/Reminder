@@ -4,6 +4,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon, QFont
 import sys
 import requests
+import json
 import random
 
 STYLE_SHEET = {'app_window': 'background-color: #DCDCDC;',
@@ -14,9 +15,10 @@ STYLE_SHEET = {'app_window': 'background-color: #DCDCDC;',
                             ' Courier; font-size: 8pt; border: 1px solid black;',
                'close_button': 'font-weight: bold; color:red;'}
 
-TASKS = {'Back to home': 'Going back to home for a weekend',
-         'Buy potatoes': 'You are short on potatoes. You can\'t make french fries without them!',
-         'Clean your room': 'Your environment is messy. Dustin\' time'}
+TASKS = {'task list': [{'Back to home': 'Going back to home for a weekend'},
+                       {'Buy potatoes': 'You are short on potatoes. You can\'t make french fries without them!'},
+                       {'Clean your room': 'Your environment is messy. Dustin\' time'},
+                       {'Try if any errors occur': 'Testing json method'}], }
 
 
 class AppWindow(QMainWindow):
@@ -86,8 +88,8 @@ class QuestListTab(QWidget):
 
     def create_list_widget(self):
         self.quest_list = QtWidgets.QListWidget(self)
-        for task in TASKS:
-            self.quest_list.addItem(task)
+        #for task in TASKS:
+            #self.quest_list.addItem(task)
         self.quest_list.setMinimumSize(250, 400)
         self.quest_list.setStyleSheet('background-color: #BDB76B; color: #B22222; font-weight: bold;')
         self.quest_list.itemClicked.connect(self.show_quest_info)
@@ -152,7 +154,8 @@ class QuestInfoTab(QWidget):
         self.main_layout.addWidget(self.quest_text)
 
     def update_quest_info(self, message):
-        self.quest_text.setText(TASKS[message])
+        # self.quest_text.setText(TASKS[message])
+        pass
 
 
 class BottomWidget(QWidget):
@@ -208,6 +211,8 @@ class BottomWidget(QWidget):
 
     @staticmethod
     def close_button_clicked():
+        with open('task_list.txt', 'w') as outfile:
+            json.dump(TASKS, outfile, indent=2)
         sys.exit()
 
 
