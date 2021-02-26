@@ -71,6 +71,7 @@ class QuestListTab(QWidget):
         self.width = 400
         self.height = 500
         self.main_layout = QVBoxLayout()
+        self.task_list = None
         # Create widgets
         self.create_label()
         self.create_list_widget()
@@ -94,6 +95,7 @@ class QuestListTab(QWidget):
         self.quest_list.setStyleSheet('background-color: #BDB76B; color: #B22222; font-weight: bold;')
         self.quest_list.itemClicked.connect(self.show_quest_info)
         self.main_layout.addWidget(self.quest_list)
+        self.retrieve_tasks()
 
     def create_buttons(self):
         button_layout = QHBoxLayout()
@@ -117,6 +119,14 @@ class QuestListTab(QWidget):
 
         self.main_layout.addStretch(1)
         self.main_layout.addLayout(button_layout)
+
+    def retrieve_tasks(self):
+        with open('task_list.txt', 'r') as tasks:
+            data = json.load(tasks)
+        self.task_list = data['task list']
+        for task in self.task_list:
+            for key in task:
+                self.quest_list.addItem(key)
 
     def show_quest_info(self, item):
         self.quest_info_update.emit(str(item.text()))
@@ -154,7 +164,7 @@ class QuestInfoTab(QWidget):
         self.main_layout.addWidget(self.quest_text)
 
     def update_quest_info(self, message):
-        # self.quest_text.setText(TASKS[message])
+        #self.quest_text.setText(TASKS[message])
         pass
 
 
@@ -196,18 +206,18 @@ class BottomWidget(QWidget):
         self.setLayout(hbox)
 
     def get_motivational_quote(self):
-        url = "https://type.fit/api/quotes?fbclid=IwAR066CVqn2qdvUIEBui3J2r-xre3ZcaQrfKJkqJmf4Drj2FH-qgW1DgcD4c"
-        response = requests.get(url)
-        if response.status_code == 200:
-            quote_list = response.json()
-            chosen_quote = random.choice(quote_list)
-            while len(chosen_quote['text']) > 90:
-                chosen_quote = random.choice(quote_list)
-            if chosen_quote['author'] is None:
-                chosen_quote['author'] = 'Anonymous'
-            self.mot_quote.setText(chosen_quote['text'] + " - " + chosen_quote['author'])
-        else:
-            self.mot_quote.setText("Be better than yesterday and worse than tomorrow! - Daemiac")
+        # url = "https://type.fit/api/quotes?fbclid=IwAR066CVqn2qdvUIEBui3J2r-xre3ZcaQrfKJkqJmf4Drj2FH-qgW1DgcD4c"
+        # response = requests.get(url)
+        # if response.status_code == 200:
+        #     quote_list = response.json()
+        #     chosen_quote = random.choice(quote_list)
+        #     while len(chosen_quote['text']) > 90:
+        #         chosen_quote = random.choice(quote_list)
+        #     if chosen_quote['author'] is None:
+        #         chosen_quote['author'] = 'Anonymous'
+        #     self.mot_quote.setText(chosen_quote['text'] + " - " + chosen_quote['author'])
+        # else:
+        self.mot_quote.setText("Be better than yesterday and worse than tomorrow! - Daemiac")
 
     @staticmethod
     def close_button_clicked():
