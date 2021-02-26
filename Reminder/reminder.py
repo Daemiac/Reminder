@@ -226,6 +226,21 @@ class BottomWidget(QWidget):
         sys.exit()
 
 
+class TaskList:
+    def __init__(self):
+        self.task_list = None
+
+    def retrieve_tasks(self):
+        with open('task_list.txt', 'r') as read_file:
+            data = json.load(read_file)
+            self.task_list = data['task list']
+
+    def save_tasks(self):
+        data = {"task list": self.task_list}
+        with open('task_list.txt', 'w') as outfile:
+            json.dump(data, outfile, ident=2)
+
+
 if __name__ == '__main__':
     app = QApplication([])
     main_app = AppWindow()
