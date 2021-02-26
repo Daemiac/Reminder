@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout
 from PyQt5.QtCore import Qt
@@ -21,7 +23,7 @@ TASKS = {'task list': [{'Back to home': 'Going back to home for a weekend'},
                        {'Try if any errors occur': 'Testing json method'}], }
 
 
-class AppWindow(QMainWindow):
+class AppView(QMainWindow):
     """ Main window of the app """
     def __init__(self):
         super().__init__()
@@ -46,12 +48,12 @@ class AppWindow(QMainWindow):
         self.second_widget = QuestInfoTab()
         self.third_widget = BottomWidget()
 
-        self.create_view()
+        self.render_view()
 
         # signal transfer methods
         self.first_widget.quest_info_update.connect(self.second_widget.update_quest_info)
 
-    def create_view(self):
+    def render_view(self):
         """ layout objects """
         minor_layout = QHBoxLayout()
         minor_layout.addWidget(self.first_widget)
@@ -226,7 +228,13 @@ class BottomWidget(QWidget):
         sys.exit()
 
 
-class TaskList:
+class AppController:
+    def __init__(self, view, model):
+        self._view = view
+        self._model = model
+
+
+class AppModel:
     def __init__(self):
         self.task_list = None
 
@@ -241,8 +249,20 @@ class TaskList:
             json.dump(data, outfile, ident=2)
 
 
-if __name__ == '__main__':
+def main():
+    """ Main function """
+    # instance of 'QApplication'
     app = QApplication([])
-    main_app = AppWindow()
-    main_app.show()
+    # instance of the model
+    model = AppModel()
+    # render the view
+    view = AppView()
+    view.show()
+    # instance of the controller
+    AppController(view=view, model=model)
+
     sys.exit(app.exec_())
+
+
+if __name__ == '__main__':
+    main()
