@@ -5,10 +5,9 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHB
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon, QFont
 from functools import partial
-import sys
 import requests
+import sys
 import json
-import random
 
 STYLE_SHEET = {'app_window': 'background-color: #DCDCDC;',
                'quest_list_label': 'font-weight: bold; font-family: Verdana; color: #8B0000; font-size: 11pt',
@@ -94,7 +93,7 @@ class QuestListTab(QWidget):
         self.quest_list = QtWidgets.QListWidget(self)
         self.quest_list.setMinimumSize(250, 400)
         self.quest_list.setStyleSheet('background-color: #BDB76B; color: #B22222; font-weight: bold;')
-        self.quest_list.itemClicked.connect(self.show_quest_info)
+        #self.quest_list.itemClicked.connect(self.show_quest_info)
         self.main_layout.addWidget(self.quest_list)
         #self.retrieve_tasks()
 
@@ -161,9 +160,8 @@ class QuestInfoTab(QWidget):
 
         self.main_layout.addWidget(self.quest_text)
 
-    def update_quest_info(self, message):
-        #self.quest_text.setText(TASKS[message])
-        pass
+    def update_quest_info(self, item_clicked):
+        self.quest_text.setText("Details: {}".format(item_clicked))
 
 
 class BottomWidget(QWidget):
@@ -227,6 +225,7 @@ class AppController:
 
     def _connect_signals(self):
         self._view.third_widget.close_button.clicked.connect(self._close_the_app)
+        self._view.first_widget.quest_list.itemClicked.connect(self.update_task_info)
 
     def _close_the_app(self):
         self._model.save_tasks()
@@ -236,18 +235,28 @@ class AppController:
     def update_task_list(self):
         self._view.first_widget.show_tasks(self._model.task_list)
 
+    def update_task_info(self, item_clicked):
+        item_clicked = str(item_clicked.text())
+        # searching through list of dictionaries
+        task_det_dic = next(d for i, d in enumerate(self._model.task_list) if item_clicked in d)
+        task_info = task_det_dic[item_clicked]
+        self._view.second_widget.update_quest_info(task_info)
+
 
 class AppModel:
     def __init__(self):
-        self.retrieve_tasks()
-    #TODO fix this method and handle an exception
-    def retrieve_tasks(self):
+        self.task_list = self.retrieve_tasks()
+
+    @staticmethod
+    def retrieve_tasks():
+        # TODO Handle an exception when there is not a single entry
         with open('task_list.txt', 'r') as read_file:
             data = json.load(read_file)
             print(data['task list'])
+            return data['task list']
 
     def save_tasks(self):
-        data = TASKS
+        data = {"task list": self.task_list}
         with open('task_list.txt', 'w') as outfile:
             json.dump(data, outfile, indent=2)
         print("Tasks imported to task.txt file")
