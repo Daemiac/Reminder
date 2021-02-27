@@ -4,6 +4,7 @@ from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon, QFont
+from functools import partial
 import sys
 import requests
 import json
@@ -91,13 +92,11 @@ class QuestListTab(QWidget):
 
     def create_list_widget(self):
         self.quest_list = QtWidgets.QListWidget(self)
-        #for task in TASKS:
-            #self.quest_list.addItem(task)
         self.quest_list.setMinimumSize(250, 400)
         self.quest_list.setStyleSheet('background-color: #BDB76B; color: #B22222; font-weight: bold;')
         self.quest_list.itemClicked.connect(self.show_quest_info)
         self.main_layout.addWidget(self.quest_list)
-        self.retrieve_tasks()
+        #self.retrieve_tasks()
 
     def create_buttons(self):
         button_layout = QHBoxLayout()
@@ -122,11 +121,8 @@ class QuestListTab(QWidget):
         self.main_layout.addStretch(1)
         self.main_layout.addLayout(button_layout)
 
-    def retrieve_tasks(self):
-        with open('task_list.txt', 'r') as tasks:
-            data = json.load(tasks)
-        self.task_list = data['task list']
-        for task in self.task_list:
+    def show_tasks(self, task_list):
+        for task in task_list:
             for key in task:
                 self.quest_list.addItem(key)
 
@@ -196,7 +192,6 @@ class BottomWidget(QWidget):
         self.close_button.setStyleSheet(STYLE_SHEET['close_button'])
         self.close_button.setFixedWidth(100)
         self.close_button.setFixedHeight(30)
-        self.close_button.clicked.connect(self.close_button_clicked)
 
         self.main_layout.addWidget(self.close_button)
 
@@ -208,6 +203,7 @@ class BottomWidget(QWidget):
         self.setLayout(hbox)
 
     def get_motivational_quote(self):
+        """ Gets motivational quote from linked api <currently api's server is down> """
         # url = "https://type.fit/api/quotes?fbclid=IwAR066CVqn2qdvUIEBui3J2r-xre3ZcaQrfKJkqJmf4Drj2FH-qgW1DgcD4c"
         # response = requests.get(url)
         # if response.status_code == 200:
@@ -221,32 +217,40 @@ class BottomWidget(QWidget):
         # else:
         self.mot_quote.setText("Be better than yesterday and worse than tomorrow! - Daemiac")
 
-    @staticmethod
-    def close_button_clicked():
-        with open('task_list.txt', 'w') as outfile:
-            json.dump(TASKS, outfile, indent=2)
-        sys.exit()
-
 
 class AppController:
     def __init__(self, view, model):
         self._view = view
         self._model = model
+        self.update_task_list()
+        self._connect_signals()
+
+    def _connect_signals(self):
+        self._view.third_widget.close_button.clicked.connect(self._close_the_app)
+
+    def _close_the_app(self):
+        self._model.save_tasks()
+        print("Closing the app...")
+        sys.exit()
+
+    def update_task_list(self):
+        self._view.first_widget.show_tasks(self._model.task_list)
 
 
 class AppModel:
     def __init__(self):
-        self.task_list = None
-
+        self.retrieve_tasks()
+    #TODO fix this method and handle an exception
     def retrieve_tasks(self):
         with open('task_list.txt', 'r') as read_file:
             data = json.load(read_file)
-            self.task_list = data['task list']
+            print(data['task list'])
 
     def save_tasks(self):
-        data = {"task list": self.task_list}
+        data = TASKS
         with open('task_list.txt', 'w') as outfile:
-            json.dump(data, outfile, ident=2)
+            json.dump(data, outfile, indent=2)
+        print("Tasks imported to task.txt file")
 
 
 def main():
@@ -259,7 +263,7 @@ def main():
     view = AppView()
     view.show()
     # instance of the controller
-    AppController(view=view, model=model)
+    ctrl = AppController(view=view, model=model)
 
     sys.exit(app.exec_())
 
