@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHB
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon, QFont
 from functools import partial
-import requests
+import random
 import sys
 import json
 
@@ -116,6 +116,7 @@ class TaskListWidget(QWidget):
         self.main_layout.addLayout(button_layout)
 
     def show_tasks(self, task_list):
+        """ Displays all tasks on task_list_widget """
         for task in task_list:
             for key in task:
                 self.task_list_widget.addItem(key)
@@ -173,7 +174,7 @@ class BottomWidget(QWidget):
     def create_motivational_quote(self):
         self.mot_quote = QtWidgets.QLabel(self)
         self.mot_quote.setAlignment(Qt.AlignCenter)
-        self.get_motivational_quote()
+        #self.set_motivational_quote()
         self.mot_quote.setStyleSheet(STYLE_SHEET['mot_quote'])
         self.mot_quote.adjustSize()
 
@@ -187,34 +188,17 @@ class BottomWidget(QWidget):
 
         self.main_layout.addWidget(self.close_button)
 
-    def set_layout(self):
-        hbox = QHBoxLayout()
-        hbox.addWidget(self.mot_quote)
-        hbox.stretch(1)
-        hbox.addWidget(self.close_button)
-        self.setLayout(hbox)
-
-    def get_motivational_quote(self):
-        """ Gets motivational quote from linked api <currently api's server is down> """
-        # url = "https://type.fit/api/quotes?fbclid=IwAR066CVqn2qdvUIEBui3J2r-xre3ZcaQrfKJkqJmf4Drj2FH-qgW1DgcD4c"
-        # response = requests.get(url)
-        # if response.status_code == 200:
-        #     quote_list = response.json()
-        #     chosen_quote = random.choice(quote_list)
-        #     while len(chosen_quote['text']) > 90:
-        #         chosen_quote = random.choice(quote_list)
-        #     if chosen_quote['author'] is None:
-        #         chosen_quote['author'] = 'Anonymous'
-        #     self.mot_quote.setText(chosen_quote['text'] + " - " + chosen_quote['author'])
-        # else:
-        self.mot_quote.setText("Be better than yesterday and worse than tomorrow! - Daemiac")
+    def set_motivational_quote(self, quote_dic):
+        self.mot_quote.setText(quote_dic["quote"] + " - " + quote_dic["author"])
 
 
 class AppController:
+    """ Mediates between model and view objects """
     def __init__(self, view, model):
         self._view = view
         self._model = model
         self.update_task_list()
+        self.update_motivational_quote()
         self._connect_signals()
 
     def _connect_signals(self):
@@ -228,6 +212,10 @@ class AppController:
 
     def update_task_list(self):
         self._view.first_widget.show_tasks(self._model.task_list)
+
+    def update_motivational_quote(self):
+        chosen_quote = self._model.get_motivational_quote()
+        self._view.third_widget.set_motivational_quote(chosen_quote)
 
     def update_task_info(self, item_clicked):
         item_clicked = str(item_clicked.text())
@@ -246,7 +234,7 @@ class AppModel:
         # TODO Handle an exception when there is not a single entry
         with open('task_list.txt', 'r') as read_file:
             data = json.load(read_file)
-            print(data['task list'])
+            # print(data['task list'])
             return data['task list']
 
     def save_tasks(self):
@@ -254,6 +242,18 @@ class AppModel:
         with open('task_list.txt', 'w') as outfile:
             json.dump(data, outfile, indent=2)
         print("Tasks imported to task.txt file")
+
+    @staticmethod
+    def get_motivational_quote():
+        """ Gets random motivational quote from external file """
+        with open('files/mot_quotes.txt', 'r') as read_file:
+            data = json.load(read_file)
+            mot_quote = random.choice(data["quotes"])
+            while len(mot_quote['quote']) > 90:
+                mot_quote = random.choice(mot_quote)
+            if mot_quote['author'] is None:
+                mot_quote['author'] = 'Anonymous'
+            return mot_quote
 
 
 def main():

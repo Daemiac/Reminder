@@ -1,0 +1,7 @@
+{ "quotes": [
+{ "quote": "Life isn't about getting and having, it's about giving and being.","author":"Kevin Kruse"},
+{ "quote": "Strive not to be a success, but rather to be of value.","author":"Albert Einstein"},
+{ "quote": "You miss 100% of the shots you don't take.","author":"Wayne Gretzky"},
+{ "quote": "Be better than yesterday and worse than tomorrow!","author":"Daemiac"}
+]
+}
