@@ -9,13 +9,14 @@ import requests
 import sys
 import json
 
-STYLE_SHEET = {'app_window': 'background-color: #DCDCDC;',
-               'quest_list_label': 'font-weight: bold; font-family: Verdana; color: #8B0000; font-size: 11pt',
-               'quest_details': 'font-weight: bold; font-family: Verdana; color: #8B0000; font-size: 11pt',
-               'quest_info': 'background-color: white; font-family: Courier; font-style: italic; font-size: 10pt',
+STYLE_SHEET = {'app_window': 'background-color: #121212;',
+               'button': 'background-color: #282828; font-weight: bold; color: #B3B3B3;',
+               'task_list_label': 'font-weight: bold; font-family: Verdana; color: #FFFFFF; font-size: 11pt',
+               'task_list_widget': 'background-color: #282828; color: #B3B3B3; font-weight: bold;',
+               'task_details_label': 'font-weight: bold; font-family: Verdana; color: #FFFFFF; font-size: 11pt',
+               'task_details_widget': 'background-color: #B3B3B3; font-family: Courier; font-style: italic; font-size: 10pt',
                'mot_quote': 'background-color: #800000; color: white; font-weight: bold; font-family:'
-                            ' Courier; font-size: 8pt; border: 1px solid black;',
-               'close_button': 'font-weight: bold; color:red;'}
+                            ' Courier; font-size: 8pt; border: 1px solid black;', }
 
 TASKS = {'task list': [{'Back to home': 'Going back to home for a weekend'},
                        {'Buy potatoes': 'You are short on potatoes. You can\'t make french fries without them!'},
@@ -24,7 +25,7 @@ TASKS = {'task list': [{'Back to home': 'Going back to home for a weekend'},
 
 
 class AppView(QMainWindow):
-    """ Main window of the app """
+    """ Class responsible for rendering view of the app """
     def __init__(self):
         super().__init__()
         # Set main window's properties
@@ -37,24 +38,21 @@ class AppView(QMainWindow):
         self.setGeometry(self.x_position, self.y_position, self.width, self.height)
         self.setStyleSheet(STYLE_SHEET['app_window'])
 
-        # Set the central widget and general layout
+        # Creation of the central widget and general layout
         self.generalLayout = QVBoxLayout()
         self._centralWidget = QWidget(self)
         self.setCentralWidget(self._centralWidget)
         self._centralWidget.setLayout(self.generalLayout)
 
         # Create child widgets
-        self.first_widget = QuestListTab()
-        self.second_widget = QuestInfoTab()
+        self.first_widget = TaskListWidget()
+        self.second_widget = TaskInfoWidget()
         self.third_widget = BottomWidget()
 
         self.render_view()
 
-        # signal transfer methods
-        self.first_widget.quest_info_update.connect(self.second_widget.update_quest_info)
-
     def render_view(self):
-        """ layout objects """
+        """ Creates layout of child widgets """
         minor_layout = QHBoxLayout()
         minor_layout.addWidget(self.first_widget)
         minor_layout.addStretch(1)
@@ -64,55 +62,52 @@ class AppView(QMainWindow):
         self.generalLayout.addWidget(self.third_widget)
 
 
-class QuestListTab(QWidget):
-
-    quest_info_update = QtCore.pyqtSignal(str)
-
+class TaskListWidget(QWidget):
+    """ Renders view of task list widget """
     def __init__(self):
         super().__init__()
         self.width = 400
         self.height = 500
         self.main_layout = QVBoxLayout()
         self.task_list = None
-        # Create widgets
-        self.create_label()
-        self.create_list_widget()
+
+        # Create inner widgets
+        self.create_task_list_label()
+        self.create_task_list_widget()
         self.create_buttons()
 
         self.setLayout(self.main_layout)
 
-    def create_label(self):
-        self.quest_list_label = QtWidgets.QLabel(self)
-        self.quest_list_label.setAlignment(Qt.AlignCenter)
-        self.quest_list_label.setText("List of your current tasks")
-        self.quest_list_label.setStyleSheet(STYLE_SHEET['quest_list_label'])
-        self.quest_list_label.adjustSize()
-        self.main_layout.addWidget(self.quest_list_label)
+    def create_task_list_label(self):
+        self.task_list_label = QtWidgets.QLabel(self)
+        self.task_list_label.setAlignment(Qt.AlignCenter)
+        self.task_list_label.setText("List of your current tasks")
+        self.task_list_label.setStyleSheet(STYLE_SHEET['task_list_label'])
+        self.task_list_label.adjustSize()
+        self.main_layout.addWidget(self.task_list_label)
 
-    def create_list_widget(self):
-        self.quest_list = QtWidgets.QListWidget(self)
-        self.quest_list.setMinimumSize(250, 400)
-        self.quest_list.setStyleSheet('background-color: #BDB76B; color: #B22222; font-weight: bold;')
-        #self.quest_list.itemClicked.connect(self.show_quest_info)
-        self.main_layout.addWidget(self.quest_list)
-        #self.retrieve_tasks()
+    def create_task_list_widget(self):
+        self.task_list_widget = QtWidgets.QListWidget(self)
+        self.task_list_widget.setMinimumSize(250, 400)
+        self.task_list_widget.setStyleSheet(STYLE_SHEET['task_list_widget'])
+        self.main_layout.addWidget(self.task_list_widget)
 
     def create_buttons(self):
         button_layout = QHBoxLayout()
         self.add_button = QtWidgets.QPushButton("Add task", self)
-        self.add_button.setStyleSheet(STYLE_SHEET['close_button'])
+        self.add_button.setStyleSheet(STYLE_SHEET['button'])
         self.add_button.setFixedWidth(100)
         self.add_button.setFixedHeight(30)
         button_layout.addWidget(self.add_button)
 
         self.del_button = QtWidgets.QPushButton("Change details", self)
-        self.del_button.setStyleSheet(STYLE_SHEET['close_button'])
+        self.del_button.setStyleSheet(STYLE_SHEET['button'])
         self.del_button.setFixedWidth(100)
         self.del_button.setFixedHeight(30)
         button_layout.addWidget(self.del_button)
 
         self.arch_button = QtWidgets.QPushButton("Archive task", self)
-        self.arch_button.setStyleSheet(STYLE_SHEET['close_button'])
+        self.arch_button.setStyleSheet(STYLE_SHEET['button'])
         self.arch_button.setFixedWidth(100)
         self.arch_button.setFixedHeight(30)
         button_layout.addWidget(self.arch_button)
@@ -123,40 +118,38 @@ class QuestListTab(QWidget):
     def show_tasks(self, task_list):
         for task in task_list:
             for key in task:
-                self.quest_list.addItem(key)
-
-    def show_quest_info(self, item):
-        self.quest_info_update.emit(str(item.text()))
+                self.task_list_widget.addItem(key)
 
 
-class QuestInfoTab(QWidget):
+class TaskInfoWidget(QWidget):
+    """ Renders view of task info widget """
     def __init__(self):
         super().__init__()
         self.width = 700
         self.height = 500
         self.setFixedWidth(self.width)
         self.setFixedHeight(self.height)
-
         self.main_layout = QVBoxLayout()
-        # Create widgets
-        self.create_label()
-        self.create_info_widget()
+
+        # Create inner widgets
+        self.create_task_details_label()
+        self.create_task_details_widget()
 
         self.setLayout(self.main_layout)
 
-    def create_label(self):
-        self.quest_details = QtWidgets.QLabel(self)
-        self.quest_details.setAlignment(Qt.AlignCenter)
-        self.quest_details.setText("Details of your task")
-        self.quest_details.setStyleSheet(STYLE_SHEET['quest_details'])
-        self.quest_details.adjustSize()
+    def create_task_details_label(self):
+        self.task_details_label = QtWidgets.QLabel(self)
+        self.task_details_label.setAlignment(Qt.AlignCenter)
+        self.task_details_label.setText("Details of your task")
+        self.task_details_label.setStyleSheet(STYLE_SHEET['task_details_label'])
+        self.task_details_label.adjustSize()
 
-        self.main_layout.addWidget(self.quest_details)
+        self.main_layout.addWidget(self.task_details_label)
 
-    def create_info_widget(self):
+    def create_task_details_widget(self):
         self.quest_text = QtWidgets.QTextBrowser(self)
-        self.quest_text.append("Quest info here!")
-        self.quest_text.setStyleSheet(STYLE_SHEET['quest_info'])
+        self.quest_text.append("Select a task to show its details here!")
+        self.quest_text.setStyleSheet(STYLE_SHEET['task_details_widget'])
 
         self.main_layout.addWidget(self.quest_text)
 
@@ -165,6 +158,7 @@ class QuestInfoTab(QWidget):
 
 
 class BottomWidget(QWidget):
+    """ Renders view of bottom widget """
     def __init__(self):
         super().__init__()
         self.width = 700
@@ -187,7 +181,7 @@ class BottomWidget(QWidget):
 
     def create_close_button(self):
         self.close_button = QtWidgets.QPushButton("Close app", self)
-        self.close_button.setStyleSheet(STYLE_SHEET['close_button'])
+        self.close_button.setStyleSheet(STYLE_SHEET['button'])
         self.close_button.setFixedWidth(100)
         self.close_button.setFixedHeight(30)
 
@@ -225,7 +219,7 @@ class AppController:
 
     def _connect_signals(self):
         self._view.third_widget.close_button.clicked.connect(self._close_the_app)
-        self._view.first_widget.quest_list.itemClicked.connect(self.update_task_info)
+        self._view.first_widget.task_list_widget.itemClicked.connect(self.update_task_info)
 
     def _close_the_app(self):
         self._model.save_tasks()
