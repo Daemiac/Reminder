@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
 from PyQt5 import QtWidgets, QtCore
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout
+from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog, QWidget, QVBoxLayout, QHBoxLayout, QDialogButtonBox, \
+    QGroupBox, QFormLayout
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon, QFont
 from functools import partial
@@ -14,7 +15,8 @@ STYLE_SHEET = {'app_window': 'background-color: #121212;',
                'task_list_label': 'font-weight: bold; font-family: Verdana; color: #FFFFFF; font-size: 11pt',
                'task_list_widget': 'background-color: #282828; color: #B3B3B3; font-weight: bold;',
                'task_details_label': 'font-weight: bold; font-family: Verdana; color: #FFFFFF; font-size: 11pt',
-               'task_details_widget': 'background-color: #B3B3B3; font-family: Courier; font-style: italic; font-size: 10pt',
+               'task_details_widget': 'background-color: #B3B3B3; font-family: Courier;'
+                                      ' font-style: italic; font-size: 10pt',
                'mot_quote': 'background-color: #800000; color: white; font-weight: bold; font-family:'
                             ' Courier; font-size: 8pt; border: 1px solid black;', }
 
@@ -174,7 +176,6 @@ class BottomWidget(QWidget):
     def create_motivational_quote(self):
         self.mot_quote = QtWidgets.QLabel(self)
         self.mot_quote.setAlignment(Qt.AlignCenter)
-        #self.set_motivational_quote()
         self.mot_quote.setStyleSheet(STYLE_SHEET['mot_quote'])
         self.mot_quote.adjustSize()
 
@@ -192,6 +193,34 @@ class BottomWidget(QWidget):
         self.mot_quote.setText(quote_dic["quote"] + " - " + quote_dic["author"])
 
 
+class AddDialog(QDialog):
+
+    def __init__(self):
+        super(AddDialog, self).__init__()
+        self.setFixedWidth(500)
+        self.setFixedHeight(300)
+
+        self.main_layout = QVBoxLayout()
+        self.create_form_group_box()
+        self.create_button_box()
+        self.setLayout(self.main_layout)
+
+        self.setWindowTitle("Add new task to your list")
+
+    def create_form_group_box(self):
+        self.form_group_box = QGroupBox("Task Information")
+        layout = QFormLayout()
+        layout.addRow(QtWidgets.QLabel("Task title:"), QtWidgets.QLineEdit())
+        layout.addRow(QtWidgets.QLabel("Task details:"), QtWidgets.QTextEdit())
+        self.form_group_box.setLayout(layout)
+
+        self.main_layout.addWidget(self.form_group_box)
+
+    def create_button_box(self):
+        button_box = QDialogButtonBox(QDialogButtonBox.Save | QDialogButtonBox.Cancel)
+        self.main_layout.addWidget(button_box)
+
+
 class AppController:
     """ Mediates between model and view objects """
     def __init__(self, view, model):
@@ -202,6 +231,7 @@ class AppController:
         self._connect_signals()
 
     def _connect_signals(self):
+        self._view.first_widget.add_button.clicked.connect(self.add_task)
         self._view.third_widget.close_button.clicked.connect(self._close_the_app)
         self._view.first_widget.task_list_widget.itemClicked.connect(self.update_task_info)
 
@@ -224,6 +254,10 @@ class AppController:
         task_info = task_det_dic[item_clicked]
         self._view.second_widget.update_quest_info(task_info)
 
+    def add_task(self):
+        d = AddDialog()
+        d.exec_()
+
 
 class AppModel:
     def __init__(self):
@@ -231,7 +265,7 @@ class AppModel:
 
     @staticmethod
     def retrieve_tasks():
-        # TODO Handle an exception when there is not a single entry
+        # TODO Handle an exception when there is not a single item in dictionary
         with open('task_list.txt', 'r') as read_file:
             data = json.load(read_file)
             # print(data['task list'])
@@ -249,11 +283,14 @@ class AppModel:
         with open('files/mot_quotes.txt', 'r') as read_file:
             data = json.load(read_file)
             mot_quote = random.choice(data["quotes"])
-            while len(mot_quote['quote']) > 90:
-                mot_quote = random.choice(mot_quote)
-            if mot_quote['author'] is None:
-                mot_quote['author'] = 'Anonymous'
+            while len(mot_quote["quote"]) > 90:
+                mot_quote = random.choice(data["quotes"])
+            if mot_quote["author"] is None or mot_quote["author"] == "":
+                mot_quote['author'] = 'Unknown'
             return mot_quote
+
+    def button_checker(self):
+        print("The button has been clicked!")
 
 
 def main():
