@@ -119,6 +119,7 @@ class TaskListWidget(QWidget):
 
     def show_tasks(self, task_list):
         """ Displays all tasks on task_list_widget """
+        self.task_list_widget.clear()
         for task in task_list:
             for key in task:
                 self.task_list_widget.addItem(key)
@@ -208,17 +209,18 @@ class AddDialog(QDialog):
         self.setWindowTitle("Add new task to your list")
 
     def create_form_group_box(self):
+        # TODO refactor dialog window
         self.form_group_box = QGroupBox("Task Information")
         layout = QFormLayout()
-        layout.addRow(QtWidgets.QLabel("Task title:"), QtWidgets.QLineEdit())
-        layout.addRow(QtWidgets.QLabel("Task details:"), QtWidgets.QTextEdit())
+        layout.addRow(QtWidgets.QLabel("Task title:"), QtWidgets.QLineEdit("Write your task here"))
+        layout.addRow(QtWidgets.QLabel("Task details:"), QtWidgets.QTextEdit("Write tasks details here"))
         self.form_group_box.setLayout(layout)
 
         self.main_layout.addWidget(self.form_group_box)
 
     def create_button_box(self):
-        button_box = QDialogButtonBox(QDialogButtonBox.Save | QDialogButtonBox.Cancel)
-        self.main_layout.addWidget(button_box)
+        self.button_box = QDialogButtonBox(QDialogButtonBox.Save | QDialogButtonBox.Cancel)
+        self.main_layout.addWidget(self.button_box)
 
 
 class AppController:
@@ -234,6 +236,10 @@ class AppController:
         self._view.first_widget.add_button.clicked.connect(self.add_task)
         self._view.third_widget.close_button.clicked.connect(self._close_the_app)
         self._view.first_widget.task_list_widget.itemClicked.connect(self.update_task_info)
+
+    def _connect_dialog_signals(self):
+        self._dialog.button_box.accepted.connect(self.accept_dialog)
+        self._dialog.button_box.rejected.connect(self.reject_dialog)
 
     def _close_the_app(self):
         self._model.save_tasks()
@@ -255,8 +261,21 @@ class AppController:
         self._view.second_widget.update_quest_info(task_info)
 
     def add_task(self):
-        d = AddDialog()
-        d.exec_()
+        self._dialog = AddDialog()
+        self._connect_dialog_signals()
+        self._dialog.show()
+
+    def accept_dialog(self):
+        # TODO implement taking values from dialog textedit fields
+        key, value = "Refactor reminder app code", "Need to implement task addition feature"
+        self._model.add_task_to_list(key, value)
+        self.update_task_list()
+        self._dialog.close()
+        print("Dialog form has been accepted. The task has been added. Closing the dialog window...")
+
+    def reject_dialog(self):
+        self._dialog.close()
+        print("Dialog form has been rejected. Closing the dialog window...")
 
 
 class AppModel:
@@ -289,8 +308,10 @@ class AppModel:
                 mot_quote['author'] = 'Unknown'
             return mot_quote
 
-    def button_checker(self):
-        print("The button has been clicked!")
+    def add_task_to_list(self, title, details):
+        task = {title: details}
+        self.task_list.append(task)
+        print("A task has been added to list!")
 
 
 def main():
