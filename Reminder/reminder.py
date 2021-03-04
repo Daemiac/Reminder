@@ -11,9 +11,9 @@ import sys
 import json
 
 STYLE_SHEET = {'app_window': 'background-color: #121212;',
-               'button': 'background-color: #282828; font-weight: bold; color: #B3B3B3;',
+               'button': 'background-color: #282828; font-weight: bold; color: #B3B3B3; border-radius: 10;',
                'task_list_label': 'font-weight: bold; font-family: Verdana; color: #FFFFFF; font-size: 11pt',
-               'task_list_widget': 'background-color: #282828; color: #B3B3B3; font-weight: bold;',
+               'task_list_widget': 'background-color: #282828; color: #B3B3B3; font-weight: bold; border-radius: 5;',
                'task_details_label': 'font-weight: bold; font-family: Verdana; color: #FFFFFF; font-size: 11pt',
                'task_details_widget': 'background-color: #B3B3B3; font-family: Courier;'
                                       ' font-style: italic; font-size: 10pt',
@@ -102,11 +102,11 @@ class TaskListWidget(QWidget):
         self.add_button.setFixedHeight(30)
         button_layout.addWidget(self.add_button)
 
-        self.del_button = QtWidgets.QPushButton("Change details", self)
-        self.del_button.setStyleSheet(STYLE_SHEET['button'])
-        self.del_button.setFixedWidth(100)
-        self.del_button.setFixedHeight(30)
-        button_layout.addWidget(self.del_button)
+        self.update_button = QtWidgets.QPushButton("Update task", self)
+        self.update_button.setStyleSheet(STYLE_SHEET['button'])
+        self.update_button.setFixedWidth(100)
+        self.update_button.setFixedHeight(30)
+        button_layout.addWidget(self.update_button)
 
         self.arch_button = QtWidgets.QPushButton("Archive task", self)
         self.arch_button.setStyleSheet(STYLE_SHEET['button'])
@@ -211,9 +211,14 @@ class AddDialog(QDialog):
     def create_form_group_box(self):
         # TODO refactor dialog window
         self.form_group_box = QGroupBox("Task Information")
+        self.task_title_label = QtWidgets.QLabel("Task title:")
+        self.task_title_label.setStyleSheet("font-weight: bold")
+        self.task_title_edit = QtWidgets.QLineEdit("Write your task here")
+        self.task_details_label = QtWidgets.QLabel("Task details:")
+        self.task_details_edit = QtWidgets.QTextEdit("Write tasks details here")
         layout = QFormLayout()
-        layout.addRow(QtWidgets.QLabel("Task title:"), QtWidgets.QLineEdit("Write your task here"))
-        layout.addRow(QtWidgets.QLabel("Task details:"), QtWidgets.QTextEdit("Write tasks details here"))
+        layout.addRow(self.task_title_label, self.task_title_edit)
+        layout.addRow(self.task_details_label, self.task_details_edit)
         self.form_group_box.setLayout(layout)
 
         self.main_layout.addWidget(self.form_group_box)
@@ -267,7 +272,8 @@ class AppController:
 
     def accept_dialog(self):
         # TODO implement taking values from dialog textedit fields
-        key, value = "Refactor reminder app code", "Need to implement task addition feature"
+        key = self._dialog.task_title_edit.text()
+        value = self._dialog.task_details_edit.toPlainText()
         self._model.add_task_to_list(key, value)
         self.update_task_list()
         self._dialog.close()
