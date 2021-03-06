@@ -292,7 +292,9 @@ class AppController:
     def delete_task(self):
         item_to_delete = self.item_clicked
         self._model.delete_task_from_list(item_to_delete)
-        #self.update_task_list()
+        print("task deleted successfully !")
+        self.update_task_list()
+        self._view.second_widget.update_quest_info("The task has been deleted!")
 
 
 class AppModel:
@@ -332,8 +334,8 @@ class AppModel:
 
     def delete_task_from_list(self, task):
         print(task)
-        for key in self.task_list:
-            print(key)
+        task_det = next(i for i, d in enumerate(self.task_list) if task in d)
+        del self.task_list[task_det]
 
 
 def main():
