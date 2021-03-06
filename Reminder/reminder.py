@@ -238,7 +238,8 @@ class AppController:
         self._connect_signals()
 
     def _connect_signals(self):
-        self._view.first_widget.add_button.clicked.connect(self.add_task)
+        self._view.first_widget.add_button.clicked.connect(self.add_task_window)
+        self._view.first_widget.arch_button.clicked.connect(self.delete_task)
         self._view.third_widget.close_button.clicked.connect(self._close_the_app)
         self._view.first_widget.task_list_widget.itemClicked.connect(self.update_task_info)
 
@@ -258,14 +259,19 @@ class AppController:
         chosen_quote = self._model.get_motivational_quote()
         self._view.third_widget.set_motivational_quote(chosen_quote)
 
-    def update_task_info(self, item_clicked):
+    @staticmethod
+    def obtain_task_list_item(item_clicked):
         item_clicked = str(item_clicked.text())
+        return item_clicked
+
+    def update_task_info(self, item_clicked):
+        self.item_clicked = self.obtain_task_list_item(item_clicked)
         # searching through list of dictionaries
-        task_det_dic = next(d for i, d in enumerate(self._model.task_list) if item_clicked in d)
-        task_info = task_det_dic[item_clicked]
+        task_det_dic = next(d for i, d in enumerate(self._model.task_list) if self.item_clicked in d)
+        task_info = task_det_dic[self.item_clicked]
         self._view.second_widget.update_quest_info(task_info)
 
-    def add_task(self):
+    def add_task_window(self):
         self._dialog = AddDialog()
         self._connect_dialog_signals()
         self._dialog.show()
@@ -282,6 +288,11 @@ class AppController:
     def reject_dialog(self):
         self._dialog.close()
         print("Dialog form has been rejected. Closing the dialog window...")
+
+    def delete_task(self):
+        item_to_delete = self.item_clicked
+        self._model.delete_task_from_list(item_to_delete)
+        #self.update_task_list()
 
 
 class AppModel:
@@ -318,6 +329,11 @@ class AppModel:
         task = {title: details}
         self.task_list.append(task)
         print("A task has been added to list!")
+
+    def delete_task_from_list(self, task):
+        print(task)
+        for key in self.task_list:
+            print(key)
 
 
 def main():
