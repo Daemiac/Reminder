@@ -1,0 +1,13 @@
+{
+  "task list": [
+    {
+      "Back to home": "Going back to home for a weekend"
+    },
+    {
+      "Buy potatoes": "You are short on potatoes. You can\'t make french fries without them!"
+    },
+    {
+      "Clean your room": "Your environment is messy. Dustin\' time"
+    }
+  ]
+}
