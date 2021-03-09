@@ -7,6 +7,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon, QFont
 from functools import partial
 import random
+import requests
 import sys
 import json
 
@@ -196,7 +197,7 @@ class BottomWidget(QWidget):
 
     def set_motivational_quote(self, quote_dic):
         """ Method responsible for updating motivational quote widget's content """
-        self.mot_quote.setText(quote_dic["quote"] + " - " + quote_dic["author"])
+        self.mot_quote.setText(quote_dic["text"] + " - " + quote_dic["author"])
 
 
 class AddDialog(QDialog):
@@ -239,6 +240,7 @@ class AppController:
     def __init__(self, view, model):
         self._view = view
         self._model = model
+        self._mot_model = MotivationalQuoteModel()
         self.update_task_list()
         self.update_motivational_quote()
         self._connect_signals()
@@ -267,7 +269,7 @@ class AppController:
 
     def update_motivational_quote(self):
         """ Updates motivational quote widget's content with appropriate models' attribute """
-        chosen_quote = self._model.get_motivational_quote()
+        chosen_quote = self._mot_model.quote
         self._view.third_widget.set_motivational_quote(chosen_quote)
 
     @staticmethod
@@ -314,7 +316,7 @@ class AppController:
         self._view.second_widget.update_quest_info("The task has been deleted!")
 
 
-class AppModel:
+class TaskListModel:
     def __init__(self):
         self.task_list = self.retrieve_tasks()
 
@@ -334,19 +336,6 @@ class AppModel:
             json.dump(data, outfile, indent=2)
         print("Tasks imported to task.txt file")
 
-    @staticmethod
-    def get_motivational_quote():
-        # TODO Make a model for quotes handling and implement getting a quote from api
-        """ Gets random motivational quote from external file """
-        with open('files/mot_quotes.txt', 'r') as read_file:
-            data = json.load(read_file)
-            mot_quote = random.choice(data["quotes"])
-            while len(mot_quote["quote"]) > 90:
-                mot_quote = random.choice(data["quotes"])
-            if mot_quote["author"] is None or mot_quote["author"] == "":
-                mot_quote['author'] = 'Unknown'
-            return mot_quote
-
     def add_task_to_list(self, title, details):
         """ Modifies self.task_list attribute by adding given item """
         task = {title: details}
@@ -364,12 +353,47 @@ class AppModel:
         del self.task_list[task_det]
 
 
+class MotivationalQuoteModel:
+    def __init__(self):
+        self.quote = None
+        self.get_quote_from_api()
+
+    def get_quote_from_api(self):
+        """ Gets random motivational quote from api """
+        url = "https://type.fit/api/quotes?fbclid=IwAR066CVqn2qdvUIEBui3J2r-xre3ZcaQrfKJkqJmf4Drj2FH-qgW1DgcD4c"
+        response = requests.get(url)
+        if response.status_code == 200:
+            data = response.json()
+            self.quote = random.choice(data)
+            while not self.is_quote_valid():
+                self.quote = random.choice(data)
+        else:
+            self.get_quote_from_file()
+
+    def get_quote_from_file(self):
+        """ Gets random motivational quote from external file """
+        with open('files/mot_quotes.txt', 'r') as read_file:
+            data = json.load(read_file)
+            self.quote = random.choice(data["quotes"])
+            while not self.is_quote_valid():
+                self.quote = random.choice(data["quotes"])
+
+    def is_quote_valid(self):
+        """ Checks if quote's text length isn't bigger than 90 characters """
+        if len(self.quote["text"]) > 90:
+            return False
+        else:
+            if self.quote["author"] is None or self.quote["author"] == "":
+                self.quote['author'] = 'Unknown'
+            return True
+
+
 def main():
     """ Main function """
     # instance of 'QApplication'
     app = QApplication([])
     # instance of the model
-    model = AppModel()
+    model = TaskListModel()
     # render the view
     view = AppView()
     view.show()
