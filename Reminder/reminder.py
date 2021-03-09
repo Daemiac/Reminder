@@ -361,13 +361,15 @@ class MotivationalQuoteModel:
     def get_quote_from_api(self):
         """ Gets random motivational quote from api """
         url = "https://type.fit/api/quotes?fbclid=IwAR066CVqn2qdvUIEBui3J2r-xre3ZcaQrfKJkqJmf4Drj2FH-qgW1DgcD4c"
-        response = requests.get(url)
-        if response.status_code == 200:
-            data = response.json()
-            self.quote = random.choice(data)
-            while not self.is_quote_valid():
+        try:
+            response = requests.get(url)
+            if response.status_code == 200:
+                data = response.json()
                 self.quote = random.choice(data)
-        else:
+                while not self.is_quote_valid():
+                    self.quote = random.choice(data)
+        except (requests.ConnectionError, requests.Timeout):
+            print("Connection couldnt be done...")
             self.get_quote_from_file()
 
     def get_quote_from_file(self):
