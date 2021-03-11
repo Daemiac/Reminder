@@ -13,6 +13,7 @@ import json
 
 STYLE_SHEET = {'app_window': 'background-color: #121212;',
                'button': 'background-color: #282828; font-weight: bold; color: #B3B3B3; border-radius: 10;',
+               'button_hover': 'background-color: #282828; font-weight: bold; color: #FFFFFF; border-radius: 10;',
                'task_list_label': 'font-weight: bold; font-family: Verdana; color: #FFFFFF; font-size: 11pt',
                'task_list_widget': 'background-color: #282828; color: #B3B3B3; font-weight: bold; border-radius: 5;',
                'task_details_label': 'font-weight: bold; font-family: Verdana; color: #FFFFFF; font-size: 11pt',
@@ -30,11 +31,12 @@ class AppView(QMainWindow):
         self.title = "Reminder alpha ver"
         self.x_position = 400
         self.y_position = 300
-        self.width = 1100
-        self.height = 600
+        self.width = 1065
+        self.height = 575
         self.setWindowTitle(self.title)
         # TODO set proper window size and adjust the layout of the window widget
-        self.setGeometry(self.x_position, self.y_position, self.width, self.height)
+        self.setFixedSize(self.width, self.height)
+        # self.setGeometry(self.x_position, self.y_position, self.width, self.height)
         self.setStyleSheet(STYLE_SHEET['app_window'])
 
         # Creation of the central widget and general layout
@@ -97,19 +99,25 @@ class TaskListWidget(QWidget):
         """ Sets up widget's buttons and their properties """
         button_layout = QHBoxLayout()
         self.add_button = QtWidgets.QPushButton("Add task", self)
-        self.add_button.setStyleSheet(STYLE_SHEET['button'])
+        self.add_button.setObjectName("add_button")
+        self.add_button.setStyleSheet(f"#{self.add_button.objectName()}{{{STYLE_SHEET['button']}}} "
+                                      f"#{self.add_button.objectName()}::hover {{{STYLE_SHEET['button_hover']}}}")
         self.add_button.setFixedWidth(100)
         self.add_button.setFixedHeight(30)
         button_layout.addWidget(self.add_button)
 
         self.update_button = QtWidgets.QPushButton("Update task", self)
-        self.update_button.setStyleSheet(STYLE_SHEET['button'])
+        self.update_button.setObjectName("update_button")
+        self.update_button.setStyleSheet(f"#{self.update_button.objectName()}{{{STYLE_SHEET['button']}}} "
+                                         f"#{self.update_button.objectName()}::hover {{{STYLE_SHEET['button_hover']}}}")
         self.update_button.setFixedWidth(100)
         self.update_button.setFixedHeight(30)
         button_layout.addWidget(self.update_button)
 
         self.arch_button = QtWidgets.QPushButton("Archive task", self)
-        self.arch_button.setStyleSheet(STYLE_SHEET['button'])
+        self.arch_button.setObjectName("arch_button")
+        self.arch_button.setStyleSheet(f"#{self.arch_button.objectName()}{{{STYLE_SHEET['button']}}} "
+                                       f"#{self.arch_button.objectName()}::hover {{{STYLE_SHEET['button_hover']}}}")
         self.arch_button.setFixedWidth(100)
         self.arch_button.setFixedHeight(30)
         button_layout.addWidget(self.arch_button)
@@ -189,7 +197,9 @@ class BottomWidget(QWidget):
     def create_close_button(self):
         """ Sets up additional app's close button and its properties """
         self.close_button = QtWidgets.QPushButton("Close app", self)
-        self.close_button.setStyleSheet(STYLE_SHEET['button'])
+        self.close_button.setObjectName("close_button")
+        self.close_button.setStyleSheet(f"#{self.close_button.objectName()}{{{STYLE_SHEET['button']}}} "
+                                        f"#{self.close_button.objectName()}::hover {{{STYLE_SHEET['button_hover']}}}")
         self.close_button.setFixedWidth(100)
         self.close_button.setFixedHeight(30)
 
