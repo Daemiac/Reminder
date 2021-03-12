@@ -212,10 +212,14 @@ class BottomWidget(QWidget):
 
 class AddDialog(QDialog):
     """ Class used to create dialog window widgets """
-    def __init__(self):
+    def __init__(self, label1='Write your task here', label2='Write your task details here', add=False):
         super(AddDialog, self).__init__()
         self.setFixedWidth(500)
         self.setFixedHeight(300)
+
+        self.label1 = label1
+        self.label2 = label2
+        self.add_mode = add
 
         self.main_layout = QVBoxLayout()
         self.create_form_group_box()
@@ -226,12 +230,12 @@ class AddDialog(QDialog):
 
     def create_form_group_box(self):
         # TODO refactor dialog window
-        self.form_group_box = QGroupBox("Task Information")
+        self.form_group_box = QGroupBox("Task information")
         self.task_title_label = QtWidgets.QLabel("Task title:")
         self.task_title_label.setStyleSheet("font-weight: bold")
-        self.task_title_edit = QtWidgets.QLineEdit("Write your task here")
+        self.task_title_edit = QtWidgets.QLineEdit(self.label1)
         self.task_details_label = QtWidgets.QLabel("Task details:")
-        self.task_details_edit = QtWidgets.QTextEdit("Write tasks details here")
+        self.task_details_edit = QtWidgets.QTextEdit(self.label2)
         layout = QFormLayout()
         layout.addRow(self.task_title_label, self.task_title_edit)
         layout.addRow(self.task_details_label, self.task_details_edit)
@@ -258,6 +262,7 @@ class AppController:
     def _connect_signals(self):
         """ Method responsible for connecting main windows' signals with appropriate slot methods """
         self._view.first_widget.add_button.clicked.connect(self.add_task_window)
+        self._view.first_widget.update_button.clicked.connect(self.change_task_details)
         self._view.first_widget.arch_button.clicked.connect(self.delete_task)
         self._view.third_widget.close_button.clicked.connect(self._close_the_app)
         self._view.first_widget.task_list_widget.itemClicked.connect(self.update_task_info)
@@ -293,23 +298,35 @@ class AppController:
         self.item_clicked = self.obtain_task_list_item(item_clicked)
         # searching through list of dictionaries
         task_det_dic = next(d for i, d in enumerate(self._model.task_list) if self.item_clicked in d)
-        task_info = task_det_dic[self.item_clicked]
-        self._view.second_widget.update_quest_info(task_info)
+        self.task_info = task_det_dic[self.item_clicked]
+        self._view.second_widget.update_quest_info(self.task_info)
 
     def add_task_window(self):
         """ Creates a dialog window which can be used to add a task """
-        self._dialog = AddDialog()
+        self._dialog = AddDialog(add=True)
         self._connect_dialog_signals()
+        self._dialog.show()
+
+    def change_task_details(self):
+        # TODO Need to finish this method
+        task = self.item_clicked
+        details = self.task_info
+        self._dialog = AddDialog(label1=task, label2=details)
+        self._connect_dialog_signals()
+        #self._model.update_task_details()
         self._dialog.show()
 
     def accept_dialog(self):
         """ Saves dialog window's entries to model's attribute and closes dialog window """
-        key = self._dialog.task_title_edit.text()
-        value = self._dialog.task_details_edit.toPlainText()
-        self._model.add_task_to_list(key, value)
-        self.update_task_list()
-        self._dialog.close()
-        print("Dialog form has been accepted. The task has been added. Closing the dialog window...")
+        if self._dialog.add_mode is True:
+            key = self._dialog.task_title_edit.text()
+            value = self._dialog.task_details_edit.toPlainText()
+            self._model.add_task_to_list(key, value)
+            self.update_task_list()
+            self._dialog.close()
+            print("Dialog form has been accepted. The task has been added. Closing the dialog window...")
+        else:
+            print("Nothing happened. HA")
 
     def reject_dialog(self):
         """ Closes dialog window without applying changes """
@@ -321,7 +338,6 @@ class AppController:
             task list widget's view """
         item_to_delete = self.item_clicked
         self._model.delete_task_from_list(item_to_delete)
-        print("task deleted successfully !")
         self.update_task_list()
         self._view.second_widget.update_quest_info("The task has been deleted!")
 
@@ -352,7 +368,7 @@ class TaskListModel:
         self.task_list.append(task)
         print("A task has been added to list!")
 
-    def update_task(self):
+    def update_task_details(self):
         """ Modifies self.task_list attribute by changing details of given item """
         pass
 
