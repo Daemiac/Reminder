@@ -70,6 +70,7 @@ class TaskListWidget(QWidget):
         self.width = 400
         self.height = 500
         self.main_layout = QVBoxLayout()
+        self.task_list_label = None
         self.task_list = None
 
         # Create inner widgets
@@ -254,6 +255,7 @@ class AppController:
     def __init__(self, view, model):
         self._view = view
         self._model = model
+        self._dialog = None
         self._mot_model = MotivationalQuoteModel()
         self.update_task_list()
         self.update_motivational_quote()
@@ -295,11 +297,11 @@ class AppController:
 
     def update_task_info(self, item_clicked):
         """ Updates task info widget's content """
-        self.item_clicked = self.obtain_task_list_item(item_clicked)
+        self.clicked_task = self.obtain_task_list_item(item_clicked)
         # searching through list of dictionaries
-        task_det_dic = next(d for i, d in enumerate(self._model.task_list) if self.item_clicked in d)
-        self.task_info = task_det_dic[self.item_clicked]
-        self._view.second_widget.update_quest_info(self.task_info)
+        task_det_dic = next(d for i, d in enumerate(self._model.task_list) if self.clicked_task in d)
+        self.clicked_task_info = task_det_dic[self.clicked_task]
+        self._view.second_widget.update_quest_info(self.clicked_task_info)
 
     def add_task_window(self):
         """ Creates a dialog window which can be used to add a task """
@@ -308,25 +310,25 @@ class AppController:
         self._dialog.show()
 
     def change_task_details(self):
-        # TODO Need to finish this method
-        task = self.item_clicked
-        details = self.task_info
-        self._dialog = AddDialog(label1=task, label2=details)
+        """ Creates a dialog window which can be used to change details of the chosen task"""
+        self._dialog = AddDialog(label1=self.clicked_task, label2=self.clicked_task_info)
         self._connect_dialog_signals()
-        #self._model.update_task_details()
         self._dialog.show()
 
     def accept_dialog(self):
-        """ Saves dialog window's entries to model's attribute and closes dialog window """
+        """ Saves dialog window's entries to model's attribute, updates the view and closes dialog window """
+        key = self._dialog.task_title_edit.text()
+        value = self._dialog.task_details_edit.toPlainText()
         if self._dialog.add_mode is True:
-            key = self._dialog.task_title_edit.text()
-            value = self._dialog.task_details_edit.toPlainText()
             self._model.add_task_to_list(key, value)
             self.update_task_list()
             self._dialog.close()
             print("Dialog form has been accepted. The task has been added. Closing the dialog window...")
         else:
-            print("Nothing happened. HA")
+            self._model.update_task_details(self.clicked_task, self.clicked_task_info, key, value)
+            self.update_task_list()
+            self._dialog.close()
+            print("Dialog form has been accepted. Chosen task details has been changed. Closing the dialog window...")
 
     def reject_dialog(self):
         """ Closes dialog window without applying changes """
@@ -336,7 +338,7 @@ class AppController:
     def delete_task(self):
         """ Method responsible for deleting a task from model's task list attribute and updating
             task list widget's view """
-        item_to_delete = self.item_clicked
+        item_to_delete = self.clicked_task
         self._model.delete_task_from_list(item_to_delete)
         self.update_task_list()
         self._view.second_widget.update_quest_info("The task has been deleted!")
@@ -368,13 +370,15 @@ class TaskListModel:
         self.task_list.append(task)
         print("A task has been added to list!")
 
-    def update_task_details(self):
+    def update_task_details(self, old_title, old_details, title, details):
         """ Modifies self.task_list attribute by changing details of given item """
-        pass
+        item = {old_title: old_details}
+        updated_item = {title: details}
+        print(item, updated_item)
+        self.task_list[:] = [updated_item if element == item else element for element in self.task_list]
 
     def delete_task_from_list(self, task):
         """ Modifies self.task_list attribute by deleting given item """
-        print(task)
         task_det = next(i for i, d in enumerate(self.task_list) if task in d)
         del self.task_list[task_det]
 
@@ -399,7 +403,7 @@ class MotivationalQuoteModel:
             self.get_quote_from_file()
 
     def get_quote_from_file(self):
-        """ Gets random motivational quote from external file """
+        """ Gets random motivational quote from external file in case of connection or timeout error """
         with open('files/mot_quotes.txt', 'r') as read_file:
             data = json.load(read_file)
             self.quote = random.choice(data["quotes"])
