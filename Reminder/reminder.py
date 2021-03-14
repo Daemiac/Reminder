@@ -1,26 +1,14 @@
 #!/usr/bin/env python3
 
-from PyQt5 import QtWidgets, QtCore
+from Reminder import widget_styles
+from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog, QWidget, QVBoxLayout, QHBoxLayout, QDialogButtonBox, \
     QGroupBox, QFormLayout
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QIcon, QFont
-from functools import partial
 import random
 import requests
 import sys
 import json
-
-STYLE_SHEET = {'app_window': 'background-color: #121212;',
-               'button': 'background-color: #282828; font-weight: bold; color: #B3B3B3; border-radius: 10;',
-               'button_hover': 'background-color: #282828; font-weight: bold; color: #FFFFFF; border-radius: 10;',
-               'task_list_label': 'font-weight: bold; font-family: Verdana; color: #FFFFFF; font-size: 11pt',
-               'task_list_widget': 'background-color: #282828; color: #B3B3B3; font-weight: bold; border-radius: 5;',
-               'task_details_label': 'font-weight: bold; font-family: Verdana; color: #FFFFFF; font-size: 11pt',
-               'task_details_widget': 'background-color: #B3B3B3; font-family: Courier;'
-                                      ' font-style: italic; font-size: 10pt',
-               'mot_quote': 'background-color: #800000; color: white; font-weight: bold; font-family:'
-                            ' Courier; font-size: 8pt; border: 1px solid black;', }
 
 
 class AppView(QMainWindow):
@@ -34,10 +22,10 @@ class AppView(QMainWindow):
         self.width = 1065
         self.height = 575
         self.setWindowTitle(self.title)
-        # TODO set proper window size and adjust the layout of the window widget
         self.setFixedSize(self.width, self.height)
         # self.setGeometry(self.x_position, self.y_position, self.width, self.height)
-        self.setStyleSheet(STYLE_SHEET['app_window'])
+        self.setObjectName("app_window")
+        self.setStyleSheet(widget_styles.app_window_stylesheet)
 
         # Creation of the central widget and general layout
         self.generalLayout = QVBoxLayout()
@@ -70,10 +58,16 @@ class TaskListWidget(QWidget):
         self.width = 400
         self.height = 500
         self.main_layout = QVBoxLayout()
-        self.task_list_label = None
         self.task_list = None
 
-        # Create inner widgets
+        # initializing widgets
+        self.task_list_label = None
+        self.task_list_widget = None
+        self.add_button = None
+        self.update_button = None
+        self.arch_button = None
+
+        # create inner widgets
         self.create_task_list_label()
         self.create_task_list_widget()
         self.create_buttons()
@@ -85,7 +79,8 @@ class TaskListWidget(QWidget):
         self.task_list_label = QtWidgets.QLabel(self)
         self.task_list_label.setAlignment(Qt.AlignCenter)
         self.task_list_label.setText("List of your current tasks")
-        self.task_list_label.setStyleSheet(STYLE_SHEET['task_list_label'])
+        self.task_list_label.setObjectName("task_list_label")
+        self.task_list_label.setStyleSheet(widget_styles.task_list_label_stylesheet)
         self.task_list_label.adjustSize()
         self.main_layout.addWidget(self.task_list_label)
 
@@ -93,7 +88,8 @@ class TaskListWidget(QWidget):
         """ Sets up task list widget and its properties """
         self.task_list_widget = QtWidgets.QListWidget(self)
         self.task_list_widget.setMinimumSize(250, 400)
-        self.task_list_widget.setStyleSheet(STYLE_SHEET['task_list_widget'])
+        self.task_list_widget.setObjectName("task_list_widget")
+        self.task_list_widget.setStyleSheet(widget_styles.task_list_stylesheet)
         self.main_layout.addWidget(self.task_list_widget)
 
     def create_buttons(self):
@@ -101,24 +97,21 @@ class TaskListWidget(QWidget):
         button_layout = QHBoxLayout()
         self.add_button = QtWidgets.QPushButton("Add task", self)
         self.add_button.setObjectName("add_button")
-        self.add_button.setStyleSheet(f"#{self.add_button.objectName()}{{{STYLE_SHEET['button']}}} "
-                                      f"#{self.add_button.objectName()}::hover {{{STYLE_SHEET['button_hover']}}}")
+        self.add_button.setStyleSheet(widget_styles.add_button_stylesheet)
         self.add_button.setFixedWidth(100)
         self.add_button.setFixedHeight(30)
         button_layout.addWidget(self.add_button)
 
         self.update_button = QtWidgets.QPushButton("Update task", self)
         self.update_button.setObjectName("update_button")
-        self.update_button.setStyleSheet(f"#{self.update_button.objectName()}{{{STYLE_SHEET['button']}}} "
-                                         f"#{self.update_button.objectName()}::hover {{{STYLE_SHEET['button_hover']}}}")
+        self.update_button.setStyleSheet(widget_styles.update_button_stylesheet)
         self.update_button.setFixedWidth(100)
         self.update_button.setFixedHeight(30)
         button_layout.addWidget(self.update_button)
 
         self.arch_button = QtWidgets.QPushButton("Archive task", self)
         self.arch_button.setObjectName("arch_button")
-        self.arch_button.setStyleSheet(f"#{self.arch_button.objectName()}{{{STYLE_SHEET['button']}}} "
-                                       f"#{self.arch_button.objectName()}::hover {{{STYLE_SHEET['button_hover']}}}")
+        self.arch_button.setStyleSheet(widget_styles.arch_button_stylesheet)
         self.arch_button.setFixedWidth(100)
         self.arch_button.setFixedHeight(30)
         button_layout.addWidget(self.arch_button)
@@ -144,6 +137,9 @@ class TaskInfoWidget(QWidget):
         self.setFixedHeight(self.height)
         self.main_layout = QVBoxLayout()
 
+        self.task_details_label = None
+        self.task_details_text = None
+
         # Create inner widgets
         self.create_task_details_label()
         self.create_task_details_widget()
@@ -155,22 +151,24 @@ class TaskInfoWidget(QWidget):
         self.task_details_label = QtWidgets.QLabel(self)
         self.task_details_label.setAlignment(Qt.AlignCenter)
         self.task_details_label.setText("Details of your task")
-        self.task_details_label.setStyleSheet(STYLE_SHEET['task_details_label'])
+        self.task_details_label.setObjectName("task_details_label")
+        self.task_details_label.setStyleSheet(widget_styles.task_details_label_stylesheet)
         self.task_details_label.adjustSize()
 
         self.main_layout.addWidget(self.task_details_label)
 
     def create_task_details_widget(self):
         """ Sets up task detail widget and its properties """
-        self.quest_text = QtWidgets.QTextBrowser(self)
-        self.quest_text.append("Select a task to show its details here!")
-        self.quest_text.setStyleSheet(STYLE_SHEET['task_details_widget'])
+        self.task_details_text = QtWidgets.QTextBrowser(self)
+        self.task_details_text.setObjectName("task_details_text")
+        self.task_details_text.append("Select a task to show its details here!")
+        self.task_details_text.setStyleSheet(widget_styles.task_details_text_stylesheet)
 
-        self.main_layout.addWidget(self.quest_text)
+        self.main_layout.addWidget(self.task_details_text)
 
     def update_quest_info(self, item_clicked):
         """ Method responsible for updating task detail widget's content """
-        self.quest_text.setText("Details: {}".format(item_clicked))
+        self.task_details_text.setText("Details: {}".format(item_clicked))
 
 
 class BottomWidget(QWidget):
@@ -179,6 +177,9 @@ class BottomWidget(QWidget):
         super().__init__()
         self.width = 700
         self.height = 50
+
+        self.mot_quote = None
+        self.close_button = None
 
         self.main_layout = QHBoxLayout()
         self.create_motivational_quote()
@@ -190,7 +191,8 @@ class BottomWidget(QWidget):
         """ Sets up motivational quote widget and its properties """
         self.mot_quote = QtWidgets.QLabel(self)
         self.mot_quote.setAlignment(Qt.AlignCenter)
-        self.mot_quote.setStyleSheet(STYLE_SHEET['mot_quote'])
+        self.mot_quote.setObjectName("mot_quote")
+        self.mot_quote.setStyleSheet(widget_styles.mot_quote_stylesheet)
         self.mot_quote.adjustSize()
 
         self.main_layout.addWidget(self.mot_quote)
@@ -199,8 +201,7 @@ class BottomWidget(QWidget):
         """ Sets up additional app's close button and its properties """
         self.close_button = QtWidgets.QPushButton("Close app", self)
         self.close_button.setObjectName("close_button")
-        self.close_button.setStyleSheet(f"#{self.close_button.objectName()}{{{STYLE_SHEET['button']}}} "
-                                        f"#{self.close_button.objectName()}::hover {{{STYLE_SHEET['button_hover']}}}")
+        self.close_button.setStyleSheet(widget_styles.close_button_stylesheet)
         self.close_button.setFixedWidth(100)
         self.close_button.setFixedHeight(30)
 
@@ -255,8 +256,12 @@ class AppController:
     def __init__(self, view, model):
         self._view = view
         self._model = model
-        self._dialog = None
         self._mot_model = MotivationalQuoteModel()
+        self._dialog = None
+
+        self.clicked_task = None
+        self.clicked_task_info = None
+
         self.update_task_list()
         self.update_motivational_quote()
         self._connect_signals()
