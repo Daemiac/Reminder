@@ -22,7 +22,10 @@ task_list_stylesheet = """
 #task_list_widget{
     background-color: #282828;
     color: #B3B3B3;
+    font-size: 10pt;
     font-weight: bold;
+    padding-top: 2px;
+    padding-left: 2px;
     border-radius: 5;
     alternate-background-color: #212121;
 }
@@ -107,8 +110,11 @@ task_details_text_stylesheet = """
 #task_details_text {
     background-color: #B3B3B3; 
     font-family: Courier;
+    padding-top: 5px;
+    padding-left: 12px;
+    padding-right: 12px;
     font-style: italic; 
-    font-size: 10pt;
+    font-size: 12pt;
     border-radius: 5;
 }
 """
@@ -139,6 +145,65 @@ close_button_stylesheet = """
     font-weight: bold; 
     color: #FFFFFF; 
     border-radius: 10;
+}
+
+"""
+
+dialog_style_sheet = """
+
+#dialog_window{
+    background-color: #252627;
+    border: 3px;
+    border-color: black;
+}
+
+#task_title_group_box{
+    margin-top: 10px;
+    padding-bottom: 10px;
+    background-color: #3a3b3c;
+    border-radius: 10;
+}
+
+#task_title_label{
+    font-size: 9pt;
+    font-weight: bold;
+    color: #e4e6eb;
+}
+
+#task_title_edit{
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 5px;
+    background-color: #e4e6eb;
+    color: #3a3b3c;
+    font-size: 9pt;
+    font-weight: bold;
+    border-radius: 3;
+}
+
+#task_details_group_box{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    background-color: #3a3b3c;
+    border-radius: 10;
+    font-size: 10;
+    color: #FFFFFF;
+}
+
+#task_details_label{
+    font-size: 9pt;
+    font-weight: bold;
+    color: #e4e6eb;
+}
+
+#task_details_edit{
+    padding-top: 5px;
+    padding-bottom: 5px;
+    background-color: #e4e6eb;
+    color: #3a3b3c;
+    font-weight: bold;
+    font-size: 9pt;
 }
 
 """

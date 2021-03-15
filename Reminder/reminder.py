@@ -3,7 +3,7 @@
 from Reminder import widget_styles
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog, QWidget, QVBoxLayout, QHBoxLayout, QDialogButtonBox, \
-    QGroupBox, QFormLayout
+    QGroupBox
 from PyQt5.QtCore import Qt
 import random
 import requests
@@ -214,40 +214,75 @@ class BottomWidget(QWidget):
 
 class AddDialog(QDialog):
     """ Class used to create dialog window widgets """
-    def __init__(self, label1='Write your task here', label2='Write your task details here', add=False):
+    def __init__(self, label1='Write your task title here', label2='Write your task details here', add=False):
         super(AddDialog, self).__init__()
         self.setFixedWidth(500)
-        self.setFixedHeight(300)
+        self.setFixedHeight(400)
+        self.setWindowFlag(Qt.FramelessWindowHint)
+        self.setWindowModality(Qt.ApplicationModal)
+        self.setObjectName("dialog_window")
 
-        self.label1 = label1
-        self.label2 = label2
+        self.text1 = label1
+        self.text2 = label2
         self.add_mode = add
 
+        self.task_title_group_box = None
+        self.task_title_label = None
+        self.task_title_edit = None
+        self.task_details_group_box = None
+        self.task_details_label = None
+        self.task_details_edit = None
+        self.button_box = None
+
         self.main_layout = QVBoxLayout()
-        self.create_form_group_box()
+        self.create_task_title_group_box()
+        self.create_task_details_group_box()
         self.create_button_box()
         self.setLayout(self.main_layout)
 
-        self.setWindowTitle("Add new task to your list")
+        self.setStyleSheet(widget_styles.dialog_style_sheet)
 
-    def create_form_group_box(self):
-        # TODO refactor dialog window
-        self.form_group_box = QGroupBox("Task information")
-        self.task_title_label = QtWidgets.QLabel("Task title:")
-        self.task_title_label.setStyleSheet("font-weight: bold")
-        self.task_title_edit = QtWidgets.QLineEdit(self.label1)
-        self.task_details_label = QtWidgets.QLabel("Task details:")
-        self.task_details_edit = QtWidgets.QTextEdit(self.label2)
-        layout = QFormLayout()
-        layout.addRow(self.task_title_label, self.task_title_edit)
-        layout.addRow(self.task_details_label, self.task_details_edit)
-        self.form_group_box.setLayout(layout)
+    def create_task_title_group_box(self):
+        """ Creates group box with task title related widgets """
+        self.task_title_group_box = QGroupBox()
+        self.task_title_group_box.setObjectName("task_title_group_box")
 
-        self.main_layout.addWidget(self.form_group_box)
+        self.task_title_label = QtWidgets.QLabel("Task title")
+        self.task_title_label.setObjectName("task_title_label")
+
+        self.task_title_edit = QtWidgets.QLineEdit(self.text1)
+        self.task_title_edit.setObjectName("task_title_edit")
+        self.task_title_edit.setMaxLength(35)
+
+        task_title_layout = QVBoxLayout()
+        task_title_layout.addWidget(self.task_title_label)
+        task_title_layout.addWidget(self.task_title_edit)
+        self.task_title_group_box.setLayout(task_title_layout)
+
+        self.main_layout.addWidget(self.task_title_group_box)
+
+    def create_task_details_group_box(self):
+        """ Creates group box with task details related widgets """
+        self.task_details_group_box = QGroupBox()
+        self.task_details_group_box.setObjectName("task_details_group_box")
+
+        self.task_details_label = QtWidgets.QLabel("Task details")
+        self.task_details_label.setObjectName("task_details_label")
+
+        self.task_details_edit = QtWidgets.QTextEdit(self.text2)
+        self.task_details_edit.setObjectName("task_details_edit")
+
+        task_details_layout = QVBoxLayout()
+        task_details_layout.addWidget(self.task_details_label)
+        task_details_layout.addWidget(self.task_details_edit)
+        self.task_details_group_box.setLayout(task_details_layout)
+
+        self.main_layout.addWidget(self.task_details_group_box)
 
     def create_button_box(self):
         """ Sets up dialog's window bottom buttons and their properties """
         self.button_box = QDialogButtonBox(QDialogButtonBox.Save | QDialogButtonBox.Cancel)
+        self.button_box.setObjectName("button_box")
         self.main_layout.addWidget(self.button_box)
 
 
@@ -356,7 +391,6 @@ class TaskListModel:
     @staticmethod
     def retrieve_tasks():
         """ Retrieve tasks from external file """
-        # TODO Handle an exception when there is not a single item in dictionary
         with open('task_list.txt', 'r') as read_file:
             data = json.load(read_file)
             # print(data['task list'])
