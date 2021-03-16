@@ -216,15 +216,18 @@ class AddDialog(QDialog):
     """ Class used to create dialog window widgets """
     def __init__(self, label1='Write your task title here', label2='Write your task details here', add=False):
         super(AddDialog, self).__init__()
-        self.setFixedWidth(500)
-        self.setFixedHeight(400)
-        self.setWindowFlag(Qt.FramelessWindowHint)
-        self.setWindowModality(Qt.ApplicationModal)
-        self.setObjectName("dialog_window")
-
         self.text1 = label1
         self.text2 = label2
         self.add_mode = add
+        self.add_title = "Task addition dialog window"
+        self.change_title = "Task details update dialog window"
+        self.title = self.add_title if self.add_mode is True else self.change_title
+
+        self.setFixedWidth(500)
+        self.setFixedHeight(400)
+        self.setWindowTitle(self.title)
+        self.setWindowModality(Qt.ApplicationModal)
+        self.setObjectName("dialog_window")
 
         self.task_title_group_box = None
         self.task_title_label = None
@@ -232,12 +235,13 @@ class AddDialog(QDialog):
         self.task_details_group_box = None
         self.task_details_label = None
         self.task_details_edit = None
-        self.button_box = None
+        self.save_button = None
+        self.cancel_button = None
 
         self.main_layout = QVBoxLayout()
         self.create_task_title_group_box()
         self.create_task_details_group_box()
-        self.create_button_box()
+        self.create_dialog_buttons()
         self.setLayout(self.main_layout)
 
         self.setStyleSheet(widget_styles.dialog_style_sheet)
@@ -279,11 +283,19 @@ class AddDialog(QDialog):
 
         self.main_layout.addWidget(self.task_details_group_box)
 
-    def create_button_box(self):
+    def create_dialog_buttons(self):
         """ Sets up dialog's window bottom buttons and their properties """
-        self.button_box = QDialogButtonBox(QDialogButtonBox.Save | QDialogButtonBox.Cancel)
-        self.button_box.setObjectName("button_box")
-        self.main_layout.addWidget(self.button_box)
+        button_layout = QHBoxLayout()
+
+        self.save_button = QtWidgets.QPushButton("Save", self)
+        self.save_button.setObjectName("save_button")
+        button_layout.addWidget(self.save_button)
+
+        self.cancel_button = QtWidgets.QPushButton("Cancel", self)
+        self.cancel_button.setObjectName("cancel_button")
+        button_layout.addWidget(self.cancel_button)
+
+        self.main_layout.addLayout(button_layout)
 
 
 class AppController:
@@ -311,8 +323,8 @@ class AppController:
 
     def _connect_dialog_signals(self):
         """ Method responsible for connecting dialog window's signals with appropriate slot methods """
-        self._dialog.button_box.accepted.connect(self.accept_dialog)
-        self._dialog.button_box.rejected.connect(self.reject_dialog)
+        self._dialog.save_button.clicked.connect(self.accept_dialog)
+        self._dialog.cancel_button.clicked.connect(self.reject_dialog)
 
     def _close_the_app(self):
         """ Saves changes into external file and closes the app """

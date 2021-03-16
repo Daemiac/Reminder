@@ -55,7 +55,7 @@ add_button_stylesheet = """
     border-radius: 10;
 }
 #add_button::hover{
-    background-color: #282828; 
+    background-color: #383838; 
     font-weight: bold; 
     color: #FFFFFF; 
     border-radius: 10;
@@ -72,7 +72,7 @@ update_button_stylesheet = """
     border-radius: 10;
 }
 #update_button::hover{
-    background-color: #282828; 
+    background-color: #383838; 
     font-weight: bold; 
     color: #FFFFFF; 
     border-radius: 10;
@@ -89,7 +89,7 @@ arch_button_stylesheet = """
     border-radius: 10;
 }
 #arch_button::hover{
-    background-color: #282828; 
+    background-color: #383838; 
     font-weight: bold; 
     color: #FFFFFF; 
     border-radius: 10;
@@ -141,7 +141,7 @@ close_button_stylesheet = """
     border-radius: 10;
 }
 #close_button::hover{
-    background-color: #282828; 
+    background-color: #383838; 
     font-weight: bold; 
     color: #FFFFFF; 
     border-radius: 10;
@@ -152,13 +152,11 @@ close_button_stylesheet = """
 dialog_style_sheet = """
 
 #dialog_window{
-    background-color: #252627;
-    border: 3px;
-    border-color: black;
+    background-color: #151617;
 }
 
 #task_title_group_box{
-    margin-top: 10px;
+    margin-top: 5px;
     padding-bottom: 10px;
     background-color: #3a3b3c;
     border-radius: 10;
@@ -204,6 +202,39 @@ dialog_style_sheet = """
     color: #3a3b3c;
     font-weight: bold;
     font-size: 9pt;
+}
+
+#save_button{
+    width: 100px;
+    height: 30px;
+    background-color: #282828; 
+    font-weight: bold; 
+    color: #B3B3B3; 
+    border-radius: 10;
+}
+
+#save_button::hover{
+    background-color: #383838; 
+    font-weight: bold; 
+    color: #FFFFFF; 
+    border-radius: 10;
+
+}
+
+#cancel_button{
+    height: 30px;
+    background-color: #282828; 
+    font-weight: bold; 
+    color: #B3B3B3; 
+    border-radius: 10;
+}
+
+#cancel_button::hover{
+    background-color: #383838; 
+    font-weight: bold; 
+    color: #FFFFFF; 
+    border-radius: 10;
+
 }
 
 """
