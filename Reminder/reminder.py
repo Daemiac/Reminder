@@ -9,6 +9,7 @@ import random
 import requests
 import sys
 import json
+import os
 
 
 class AppView(QMainWindow):
@@ -402,10 +403,15 @@ class TaskListModel:
 
     @staticmethod
     def retrieve_tasks():
-        """ Retrieve tasks from external file """
-        with open('task_list.txt', 'r') as read_file:
-            data = json.load(read_file)
-            # print(data['task list'])
+        """ Retrieves tasks from external file """
+        try:
+            with open('task_list.txt', 'r') as read_file:
+                data = json.load(read_file)
+                # print(data['task list'])
+        except FileNotFoundError:
+            data = {"task list": []}
+
+        finally:
             return data['task list']
 
     def save_tasks(self):
