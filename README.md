@@ -1,7 +1,7 @@
 ## Reminder
 An app developed with use of PyQt5 library that helps be organized and keeps track of user's progress in everyday life challenges. 
 ### Story
-In today's fast-paced world an ability to efficiently manage time and resources is one of the most important skills one can possess. Unfortunately not everyone has or mastered it. In addition human's memory can be unreliable, especially when it comes to details. That's why people need organisers, to keep things safe and clean. Personally I am not a huge fan of paper organisers or sharing my plans and routines with Google company, so I decided to make my own digital version of organizing app. Main purpose of this project was to get acquainted with Model-View-Controller design pattern and PyQt5 library.
+In today's fast-paced world an ability to efficiently manage time and resources is one of the most important skills one can possess. Unfortunately not everyone has or mastered it. In addition human's memory can be unreliable, especially when it comes to details. That's why people need organisers, to keep things safe and clean. Personally, I am not a huge fan of paper organisers or sharing my plans and routines with Google company, so I decided to make my own organizing app. Main purpose of this project was to get acquainted with Model-View-Controller design pattern and PyQt5 library.
 
 ### Things I learned
 - Model-View-Controller design pattern;
@@ -22,7 +22,7 @@ Current version of the app looks as follows:
 - random motivational quote for extra MOTIVATION;
 
 ### Planned features
-- change of layout of the widgets;
+- redesign of the app's window view;
 - adding a feature of "deadline" of given task;
 - adding an archiving of fulfilled tasks;
 
