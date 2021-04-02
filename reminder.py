@@ -1,8 +1,10 @@
+#!/usr/bin/env python3
+
 import sys
 
 from PyQt5.QtWidgets import QApplication
 
-from Reminder.controller import AppController, TaskListModel, AppView
+from app_modules.controller import AppController, TaskListModel, AppView
 
 
 def main():

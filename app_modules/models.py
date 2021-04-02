@@ -11,7 +11,7 @@ class TaskListModel:
     def retrieve_tasks():
         """ Retrieves tasks from external file """
         try:
-            with open('task_list.txt', 'r') as read_file:
+            with open('data/task_list.txt', 'r') as read_file:
                 data = json.load(read_file)
                 # print(data['task list'])
         except FileNotFoundError:
@@ -23,7 +23,7 @@ class TaskListModel:
     def save_tasks(self):
         """ Saves made changes to external file """
         data = {"task list": self.task_list}
-        with open('task_list.txt', 'w') as outfile:
+        with open('data/task_list.txt', 'w') as outfile:
             json.dump(data, outfile, indent=2)
         print("Tasks imported to task.txt file")
 

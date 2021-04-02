@@ -9,7 +9,7 @@ from PyQt5.QtWidgets import (
 )
 from PyQt5.QtCore import Qt
 
-from Reminder import widget_styles
+from app_modules import widget_styles
 
 
 class AppView(QMainWindow):

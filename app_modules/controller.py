@@ -1,7 +1,7 @@
 import sys
 
-from Reminder.views import AppView, AddDialog
-from Reminder.models import TaskListModel, MotivationalQuoteModel
+from app_modules.views import AppView, AddDialog
+from app_modules.models import TaskListModel, MotivationalQuoteModel
 
 
 class AppController:
