@@ -215,14 +215,12 @@ class BottomWidget(QWidget):
 
 class AddDialog(QDialog):
     """ Class used to create dialog window widgets """
-    def __init__(self, label1='Write your task title here', label2='Write your task details here', add=False):
+    def __init__(self, title, mode, label1=None, label2=None):
         super(AddDialog, self).__init__()
+        self.title = title
+        self.mode = mode
         self.text1 = label1
         self.text2 = label2
-        self.add_mode = add
-        self.add_title = "Task addition dialog window"
-        self.change_title = "Task details update dialog window"
-        self.title = self.add_title if self.add_mode is True else self.change_title
 
         self.setFixedWidth(500)
         self.setFixedHeight(400)
@@ -297,3 +295,14 @@ class AddDialog(QDialog):
         button_layout.addWidget(self.cancel_button)
 
         self.main_layout.addLayout(button_layout)
+
+    @classmethod
+    def create_add_dialog(cls):
+        """ Returns add-details type of dialog window object with given arguments """
+        return AddDialog("Task addition dialog window", True, 'Write your task title here',
+                         'Write your task details here')
+
+    @classmethod
+    def create_change_det_dialog(cls, label1, label2):
+        """ Returns change-details type of dialog window object with given arguments """
+        return AddDialog("Task details update dialog window", False, label1, label2)

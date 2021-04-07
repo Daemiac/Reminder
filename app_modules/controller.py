@@ -63,13 +63,13 @@ class AppController:
 
     def add_task_window(self):
         """ Creates a dialog window which can be used to add a task """
-        self._dialog = AddDialog(add=True)
+        self._dialog = AddDialog.create_add_dialog()
         self._connect_dialog_signals()
         self._dialog.show()
 
     def change_task_details(self):
         """ Creates a dialog window which can be used to change details of the chosen task"""
-        self._dialog = AddDialog(label1=self.clicked_task, label2=self.clicked_task_info)
+        self._dialog = AddDialog.create_change_det_dialog(label1=self.clicked_task, label2=self.clicked_task_info)
         self._connect_dialog_signals()
         self._dialog.show()
 
@@ -77,7 +77,7 @@ class AppController:
         """ Saves dialog window's entries to model's attribute, updates the view and closes dialog window """
         key = self._dialog.task_title_edit.text()
         value = self._dialog.task_details_edit.toPlainText()
-        if self._dialog.add_mode is True:
+        if self._dialog.mode:
             self._model.add_task_to_list(key, value)
             self.update_task_list()
             self._dialog.close()
