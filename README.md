@@ -23,6 +23,7 @@ Current version of the app looks as follows:
 
 ### Planned features
 - redesign of the app's window view;
+- adding a database to store and handle app's data;
 - adding a feature of "deadline" of given task;
 - adding an archiving of fulfilled tasks;
 
