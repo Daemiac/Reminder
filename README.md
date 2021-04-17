@@ -10,7 +10,7 @@ In today's fast-paced world an ability to efficiently manage time and resources 
 ![](https://img.shields.io/badge/Database-SQLite-informational?style=flat-square&logo=sqlite&logoColor=white&color=blue)
 ![](https://img.shields.io/badge/IDE-PyCharm-informational?style=flat-square&logo=Pycharm&logoColor=white&color=green)
 
-## App overview
+### App overview
 Current version of the app looks as follows:
 
 <img src="https://github.com/Daemiac/Reminder/blob/main/images/reminder_app.png" width="750" height="450">
@@ -27,7 +27,7 @@ Current version of the app looks as follows:
 - adding a feature of "deadline" of given task;
 - adding an archiving of fulfilled tasks;
 
-## Launch
+### Launch
 🚧🚧🚧
 
 You can try out the app by copying the source code and running it with IDE.
@@ -42,6 +42,6 @@ Dependencies:
 - pulling data from APIs with use of requests module;
 - creating GUIs with use of PyQT5 library;
 
-## License
+### License
 ![](https://img.shields.io/badge/License-MIT-informational?style=flat-square&logo=<>&logoColor=white&color=yellow)<br>
 [MIT](https://choosealicense.com/licenses/mit/)
