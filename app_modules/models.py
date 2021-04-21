@@ -1,11 +1,17 @@
 import random
 import requests
 import json
+import os
+
+from app_modules.db_handler import DatabaseHandler
 
 
 class TaskListModel:
     def __init__(self):
         self.task_list = self.retrieve_tasks()
+        self.db = DatabaseHandler(db_location=os.path.relpath(r"data/task_list.sqlite"))
+
+        self.clear_db()
 
     @staticmethod
     def retrieve_tasks():
@@ -19,6 +25,19 @@ class TaskListModel:
 
         finally:
             return data['task list']
+
+    def clear_db(self):
+        """ Drops previous 'tasks' table """
+        with self.db:
+            self.db.drop_table('tasks')
+
+    def save_tasks_to_db(self):
+        """ Saves changed tasks to database """
+        with self.db:
+            self.db.create_table('tasks')
+            for num, item in enumerate(self.task_list):
+                for key in item:
+                    self.db.execute("tasks", num, key, item[key])
 
     def save_tasks(self):
         """ Saves made changes to external file """

@@ -34,6 +34,7 @@ class AppController:
 
     def _close_the_app(self):
         """ Saves changes into external file and closes the app """
+        self._model.save_tasks_to_db()
         self._model.save_tasks()
         print("Closing the app...")
         sys.exit()

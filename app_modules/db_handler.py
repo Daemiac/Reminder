@@ -1,10 +1,11 @@
 import sqlite3
 import os
+import json
 
-LOCATION_CONSTANT = ''
+LOCATION_CONSTANT = os.path.relpath(r'../data/task_list.sqlite')
 
 
-class DatabaseModifier:
+class DatabaseHandler:
 
     __DB_LOCATION = LOCATION_CONSTANT
 
@@ -14,26 +15,28 @@ class DatabaseModifier:
             """ Allows to set db location through argument """
             self.connection = sqlite3.connect(db_location)
         else:
-            self.connection = sqlite3.connect(DatabaseModifier.__DB_LOCATION)
+            self.connection = sqlite3.connect(DatabaseHandler.__DB_LOCATION)
         self.cur = self.connection.cursor()
 
     def close(self):
         """ Closes sqlite3 connection """
         self.connection.close()
 
-    def execute(self, data):
-        self.cur.execute(data)
+    def execute(self, table_name, number, task, task_details):
+        self.cur.execute(f"INSERT INTO {table_name} VALUES (:id, :task, :details);",
+                         {'id': number, 'task': task, 'details': task_details})
 
-    def executemany(self, data):
-        self.cur.executemany(data)
+    def executemany(self, sql_command):
+        self.cur.executemany(sql_command)
 
-    def create_table(self):
-        self.cur.execute(f""" CREATE TABLE IF NOT EXISTS tasks( TaskID integer PRIMARY KEY, \
-                                                                TaskName text, \
-                                                                TaskDetails text, \
-                                                                AdditionDate text, \
-                                                                Deadline text, \
-                                                                Status text)""")
+    def create_table(self, table_name):
+        self.cur.execute(f""" CREATE TABLE IF NOT EXISTS {table_name}( TaskID integer, \
+                                                                        TaskName text, \
+                                                                        TaskDetails text)""")
+
+    def drop_table(self, table_name):
+        self.cur.execute(f"DROP TABLE IF EXISTS {table_name}")
+        print(f"Dropped the {table_name} table")
 
     def __enter__(self):
         return self
@@ -48,6 +51,23 @@ class DatabaseModifier:
 
 
 if __name__ == "__main__":
-    train_db = DatabaseModifier()
-    train_db.create_table()
+    train_db = DatabaseHandler()
 
+    train_db.create_table('tasks')
+    train_db.create_table('uganda')
+    train_db.create_table('hardcore')
+
+    path = os.path.relpath(r'../data/task_list.txt')
+
+    with open(f'{path}', 'r') as json_list:
+        task_list = json.load(json_list)
+        data = task_list['task list']
+
+    print(data)
+
+    with train_db:
+        for indx, item in enumerate(data):
+            for key in item:
+                print(indx, key, item[key])
+                train_db.execute("tasks", indx, key, item[key])
+        train_db.drop_table('uganda')
