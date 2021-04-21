@@ -28,8 +28,7 @@ class TaskListModel:
 
     def clear_db(self):
         """ Drops previous 'tasks' table """
-        with self.db:
-            self.db.drop_table('tasks')
+        self.db.drop_table('tasks')
 
     def save_tasks_to_db(self):
         """ Saves changed tasks to database """
