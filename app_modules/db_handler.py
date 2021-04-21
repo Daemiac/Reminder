@@ -54,8 +54,6 @@ if __name__ == "__main__":
     train_db = DatabaseHandler()
 
     train_db.create_table('tasks')
-    train_db.create_table('uganda')
-    train_db.create_table('hardcore')
 
     path = os.path.relpath(r'../data/task_list.txt')
 
@@ -63,11 +61,8 @@ if __name__ == "__main__":
         task_list = json.load(json_list)
         data = task_list['task list']
 
-    print(data)
-
     with train_db:
-        for indx, item in enumerate(data):
+        for num, item in enumerate(data):
             for key in item:
-                print(indx, key, item[key])
-                train_db.execute("tasks", indx, key, item[key])
-        train_db.drop_table('uganda')
+                print(num, key, item[key])
+                train_db.execute("tasks", num, key, item[key])
