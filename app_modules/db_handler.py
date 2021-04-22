@@ -22,9 +22,16 @@ class DatabaseHandler:
         """ Closes sqlite3 connection """
         self.connection.close()
 
-    def execute(self, table_name, number, task, task_details):
+    def insert(self, table_name, number, task, task_details):
         self.cur.execute(f"INSERT INTO {table_name} VALUES (:id, :task, :details);",
                          {'id': number, 'task': task, 'details': task_details})
+
+    def delete(self, table_name, record):
+        self.cur.execute(f"DELETE FROM {table_name} WHERE TaskID=(:item);",
+                         {'item': record})
+
+    def update(self, table_name, *args):
+        pass
 
     def executemany(self, sql_command):
         self.cur.executemany(sql_command)
@@ -51,9 +58,8 @@ class DatabaseHandler:
 
 
 if __name__ == "__main__":
-    train_db = DatabaseHandler()
-
-    train_db.create_table('tasks')
+    with DatabaseHandler() as train_db:
+        train_db.create_table('tasks')
 
     path = os.path.relpath(r'../data/task_list.txt')
 
@@ -61,8 +67,9 @@ if __name__ == "__main__":
         task_list = json.load(json_list)
         data = task_list['task list']
 
-    with train_db:
+    with DatabaseHandler() as train_db:
         for num, item in enumerate(data):
             for key in item:
                 print(num, key, item[key])
-                train_db.execute("tasks", num, key, item[key])
+                train_db.insert("tasks", num, key, item[key])
+        train_db.delete('tasks', 2)

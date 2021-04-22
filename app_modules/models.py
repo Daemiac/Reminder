@@ -36,7 +36,7 @@ class TaskListModel:
             self.db.create_table('tasks')
             for num, item in enumerate(self.task_list):
                 for key in item:
-                    self.db.execute("tasks", num, key, item[key])
+                    self.db.insert("tasks", num, key, item[key])
 
     def save_tasks(self):
         """ Saves made changes to external file """
