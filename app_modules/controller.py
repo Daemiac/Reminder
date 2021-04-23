@@ -99,5 +99,6 @@ class AppController:
             task list widget's view """
         item_to_delete = self.clicked_task
         self._model.delete_task_from_list(item_to_delete)
+        self._model.delete_task_from_db(item_to_delete)
         self.update_task_list()
         self._view.second_widget.update_quest_info("The task has been deleted!")

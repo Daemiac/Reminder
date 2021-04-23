@@ -2,7 +2,7 @@ import sqlite3
 import os
 import json
 
-LOCATION_CONSTANT = os.path.relpath(r'../data/task_list.sqlite')
+LOCATION_CONSTANT = os.path.relpath(r'data/task_list.sqlite')
 
 
 class DatabaseHandler:
@@ -27,7 +27,7 @@ class DatabaseHandler:
                          {'id': number, 'task': task, 'details': task_details})
 
     def delete(self, table_name, record):
-        self.cur.execute(f"DELETE FROM {table_name} WHERE TaskID=(:item);",
+        self.cur.execute(f"DELETE FROM {table_name} WHERE TaskName=(:item);",
                          {'item': record})
 
     def update(self, table_name, *args):
@@ -72,4 +72,4 @@ if __name__ == "__main__":
             for key in item:
                 print(num, key, item[key])
                 train_db.insert("tasks", num, key, item[key])
-        train_db.delete('tasks', 2)
+        train_db.delete('tasks', 3)

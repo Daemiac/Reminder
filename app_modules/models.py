@@ -8,13 +8,12 @@ from app_modules.db_handler import DatabaseHandler
 
 class TaskListModel:
     def __init__(self):
-        self.task_list = self.retrieve_tasks()
-        self.db = DatabaseHandler(db_location=os.path.relpath(r"data/task_list.sqlite"))
+        self.task_list = self.retrieve_tasks_from_file()
 
-        self.clear_db()
+        #self.clear_tasks_table()
 
     @staticmethod
-    def retrieve_tasks():
+    def retrieve_tasks_from_file():
         """ Retrieves tasks from external file """
         try:
             with open('data/task_list.txt', 'r') as read_file:
@@ -25,18 +24,6 @@ class TaskListModel:
 
         finally:
             return data['task list']
-
-    def clear_db(self):
-        """ Drops previous 'tasks' table """
-        self.db.drop_table('tasks')
-
-    def save_tasks_to_db(self):
-        """ Saves changed tasks to database """
-        with self.db:
-            self.db.create_table('tasks')
-            for num, item in enumerate(self.task_list):
-                for key in item:
-                    self.db.insert("tasks", num, key, item[key])
 
     def save_tasks(self):
         """ Saves made changes to external file """
@@ -62,6 +49,28 @@ class TaskListModel:
         """ Modifies self.task_list attribute by deleting given item """
         task_det = next(i for i, d in enumerate(self.task_list) if task in d)
         del self.task_list[task_det]
+
+    def save_tasks_to_db(self):
+        """ Saves changed tasks to database """
+        with DatabaseHandler() as self.db:
+            self.db.create_table('tasks')
+            for num, item in enumerate(self.task_list):
+                for key in item:
+                    self.db.insert("tasks", num, key, item[key])
+
+    def delete_task_from_db(self, task):
+        print("Let's try to delete task from db!")
+        with DatabaseHandler() as self.db:
+            self.db.delete('tasks', task)
+            print("A task has been deleted from db!")
+
+    def archive_task(self, task):
+        pass
+
+    def clear_tasks_table(self):
+        """ Drops previous 'tasks' table """
+        with DatabaseHandler() as self.db:
+            self.db.drop_table('tasks')
 
 
 class MotivationalQuoteModel:
