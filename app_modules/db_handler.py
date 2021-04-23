@@ -22,6 +22,9 @@ class DatabaseHandler:
         """ Closes sqlite3 connection """
         self.connection.close()
 
+    def select(self, table_name):
+        self.cur.execute(f"SELECT * FROM {table_name};")
+
     def insert(self, table_name, number, task, task_details):
         self.cur.execute(f"INSERT INTO {table_name} VALUES (:id, :task, :details);",
                          {'id': number, 'task': task, 'details': task_details})
@@ -72,4 +75,6 @@ if __name__ == "__main__":
             for key in item:
                 print(num, key, item[key])
                 train_db.insert("tasks", num, key, item[key])
-        train_db.delete('tasks', 3)
+        train_db.select('tasks')
+        rows = train_db.cur.fetchall()
+        print(rows)

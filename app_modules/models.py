@@ -58,6 +58,11 @@ class TaskListModel:
                 for key in item:
                     self.db.insert("tasks", num, key, item[key])
 
+    def add_task_to_db(self, task, details):
+        print("Adding task to database tryout")
+        with DatabaseHandler() as self.db:
+            self.db.insert('tasks', 4, task, details)
+
     def delete_task_from_db(self, task):
         print("Let's try to delete task from db!")
         with DatabaseHandler() as self.db:

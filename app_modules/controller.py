@@ -80,6 +80,7 @@ class AppController:
         value = self._dialog.task_details_edit.toPlainText()
         if self._dialog.mode:
             self._model.add_task_to_list(key, value)
+            self._model.add_task_to_db(key, value)
             self.update_task_list()
             self._dialog.close()
             print("Dialog form has been accepted. The task has been added. Closing the dialog window...")
