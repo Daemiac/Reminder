@@ -32,15 +32,9 @@ class AppController:
         self._dialog.save_button.clicked.connect(self.accept_dialog)
         self._dialog.cancel_button.clicked.connect(self.reject_dialog)
 
-    def _close_the_app(self):
-        """ Saves changes into external file and closes the app """
-        # self._model.save_tasks_to_db()
-        # self._model.save_tasks()
-        print("Closing the app...")
-        sys.exit()
-
     def update_task_list(self):
         """ Updates task list widget's content with content of model's task list attribute """
+        self._model.retrieve_tasks_from_db()
         self._view.first_widget.show_tasks(self._model.task_list)
 
     def update_motivational_quote(self):
@@ -57,9 +51,9 @@ class AppController:
     def update_task_info(self, item_clicked):
         """ Updates task info widget's content """
         self.clicked_task = self.obtain_task_list_item(item_clicked)
-        # searching through list of dictionaries
-        task_det_dic = next(d for i, d in enumerate(self._model.task_list) if self.clicked_task in d)
-        self.clicked_task_info = task_det_dic[1]
+        # searching through list of tuples
+        clicked_task_tuple = next(tpl for i, tpl in enumerate(self._model.task_list) if self.clicked_task in tpl)
+        self.clicked_task_info = clicked_task_tuple[1]
         self._view.second_widget.update_quest_info(self.clicked_task_info)
 
     def add_task_window(self):
@@ -79,7 +73,6 @@ class AppController:
         key = self._dialog.task_title_edit.text()
         value = self._dialog.task_details_edit.toPlainText()
         if self._dialog.mode:
-            self._model.add_task_to_list(key, value)
             self._model.add_task_to_db(key, value)
             self.update_task_list()
             self._dialog.close()
@@ -99,7 +92,12 @@ class AppController:
         """ Method responsible for deleting a task from model's task list attribute and updating
             task list widget's view """
         item_to_delete = self.clicked_task
-        self._model.delete_task_from_list(item_to_delete)
         self._model.delete_task_from_db(item_to_delete)
         self.update_task_list()
-        self._view.second_widget.update_quest_info("The task has been deleted!")
+        self._view.second_widget.update_quest_info(f"The '{item_to_delete}' task has been deleted!")
+
+    @staticmethod
+    def _close_the_app():
+        """ Saves changes into external file and closes the app """
+        print("Closing the app...")
+        sys.exit()

@@ -60,6 +60,7 @@ class DatabaseHandler:
 
 
 if __name__ == "__main__":
+
     with DatabaseHandler() as train_db:
         train_db.create_table('tasks')
 
