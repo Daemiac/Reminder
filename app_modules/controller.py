@@ -34,8 +34,8 @@ class AppController:
 
     def _close_the_app(self):
         """ Saves changes into external file and closes the app """
-        self._model.save_tasks_to_db()
-        self._model.save_tasks()
+        # self._model.save_tasks_to_db()
+        # self._model.save_tasks()
         print("Closing the app...")
         sys.exit()
 
@@ -59,7 +59,7 @@ class AppController:
         self.clicked_task = self.obtain_task_list_item(item_clicked)
         # searching through list of dictionaries
         task_det_dic = next(d for i, d in enumerate(self._model.task_list) if self.clicked_task in d)
-        self.clicked_task_info = task_det_dic[self.clicked_task]
+        self.clicked_task_info = task_det_dic[1]
         self._view.second_widget.update_quest_info(self.clicked_task_info)
 
     def add_task_window(self):

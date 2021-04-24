@@ -25,9 +25,9 @@ class DatabaseHandler:
     def select(self, table_name):
         self.cur.execute(f"SELECT * FROM {table_name};")
 
-    def insert(self, table_name, number, task, task_details):
-        self.cur.execute(f"INSERT INTO {table_name} VALUES (:id, :task, :details);",
-                         {'id': number, 'task': task, 'details': task_details})
+    def insert(self, table_name, task, task_details):
+        self.cur.execute(f"INSERT INTO {table_name} VALUES (:task, :details);",
+                         {'task': task, 'details': task_details})
 
     def delete(self, table_name, record):
         self.cur.execute(f"DELETE FROM {table_name} WHERE TaskName=(:item);",
@@ -40,8 +40,7 @@ class DatabaseHandler:
         self.cur.executemany(sql_command)
 
     def create_table(self, table_name):
-        self.cur.execute(f""" CREATE TABLE IF NOT EXISTS {table_name}( TaskID integer, \
-                                                                        TaskName text, \
+        self.cur.execute(f""" CREATE TABLE IF NOT EXISTS {table_name}(  TaskName text, \
                                                                         TaskDetails text)""")
 
     def drop_table(self, table_name):
@@ -70,11 +69,13 @@ if __name__ == "__main__":
         task_list = json.load(json_list)
         data = task_list['task list']
 
+    print(data)
+
     with DatabaseHandler() as train_db:
         for num, item in enumerate(data):
             for key in item:
                 print(num, key, item[key])
-                train_db.insert("tasks", num, key, item[key])
+                train_db.insert("tasks", key, item[key])
         train_db.select('tasks')
         rows = train_db.cur.fetchall()
         print(rows)

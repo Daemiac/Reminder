@@ -124,8 +124,7 @@ class TaskListWidget(QWidget):
         """ Displays all tasks on task_list_widget """
         self.task_list_widget.clear()
         for task in task_list:
-            for key in task:
-                self.task_list_widget.addItem(key)
+            self.task_list_widget.addItem(task[0])
 
 
 class TaskInfoWidget(QWidget):
