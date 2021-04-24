@@ -33,8 +33,10 @@ class DatabaseHandler:
         self.cur.execute(f"DELETE FROM {table_name} WHERE TaskName=(:item);",
                          {'item': record})
 
-    def update(self, table_name, *args):
-        pass
+    def update(self, table_name, task_name, new_task_name, new_task_details):
+        self.cur.execute(f"UPDATE {table_name} SET TaskName=(:new_name), TaskDetails=(:new_details)\
+                            WHERE TaskName=(:old_name);",
+                         {'new_name': new_task_name, 'new_details': new_task_details, 'old_name': task_name})
 
     def executemany(self, sql_command):
         self.cur.executemany(sql_command)
