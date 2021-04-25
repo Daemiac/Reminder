@@ -24,8 +24,9 @@ class TaskListModel:
         with DatabaseHandler() as self.db:
             self.db.insert('tasks', task, details)
 
-    def update_task_data(self, table_name, ):
-        pass
+    def update_task_data(self, task_name, new_task_name, new_details):
+        with DatabaseHandler() as self.db:
+            self.db.update('tasks', task_name, new_task_name, new_details)
 
     def delete_task_from_db(self, task):
         print("Let's try to delete task from db!")

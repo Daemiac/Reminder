@@ -78,7 +78,7 @@ class AppController:
             self._dialog.close()
             print("Dialog form has been accepted. The task has been added. Closing the dialog window...")
         else:
-            self._model.update_task_details(self.clicked_task, self.clicked_task_info, new_task_name, new_task_details)
+            self._model.update_task_data(self.clicked_task, new_task_name, new_task_details)
             self.update_task_list()
             self._dialog.close()
             print("Dialog form has been accepted. Chosen task details has been changed. Closing the dialog window...")

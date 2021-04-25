@@ -21,11 +21,11 @@ Current version of the app looks as follows:
 - deleting chosen tasks;
 - random motivational quote for extra MOTIVATION;
 
-### Planned features
-- redesign of the app's window view;
-- adding a database to store and handle app's data;
-- adding a feature of "deadline" of given task;
-- adding an archiving of fulfilled tasks;
+### Features to work on
+- [ ] redesign of the app's window view;
+- [x] <s>adding a database to store and handle app's data;</s>
+- [ ] adding a feature of "deadline" of given task;
+- [ ] archiving of fulfilled tasks;
 
 ### Launch
 🚧🚧🚧

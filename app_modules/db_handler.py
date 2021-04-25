@@ -82,3 +82,4 @@ if __name__ == "__main__":
         train_db.select('tasks')
         rows = train_db.cur.fetchall()
         print(rows)
+        train_db.update('tasks', 'Clean up the mess', 'Clean up', 'You should clean up your kitchen!')
