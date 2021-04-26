@@ -35,7 +35,9 @@ class TaskListModel:
             print("A task has been deleted from db!")
 
     def archive_task(self, task):
-        pass
+        with DatabaseHandler() as self.db:
+            self.db.create_table('archive')
+            self.db.transfer_data_between_tables('tasks', 'archive', task)
 
 
 class MotivationalQuoteModel:

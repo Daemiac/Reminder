@@ -2,6 +2,7 @@ import sys
 
 from app_modules.views import AppView, AddDialog
 from app_modules.models import TaskListModel, MotivationalQuoteModel
+from app_modules.db_handler import DatabaseHandler
 
 
 class AppController:
@@ -92,12 +93,14 @@ class AppController:
         """ Method responsible for deleting a task from model's task list attribute and updating
             task list widget's view """
         item_to_delete = self.clicked_task
-        self._model.delete_task_from_db(item_to_delete)
+        self._model.archive_task(item_to_delete)
         self.update_task_list()
         self._view.second_widget.update_quest_info(f"The '{item_to_delete}' task has been deleted!")
 
     @staticmethod
     def _close_the_app():
         """ Saves changes into external file and closes the app """
+        # with DatabaseHandler() as db:
+        #     db.drop_table('archive')
         print("Closing the app...")
         sys.exit()

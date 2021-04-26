@@ -18,10 +18,6 @@ class DatabaseHandler:
             self.connection = sqlite3.connect(DatabaseHandler.__DB_LOCATION)
         self.cur = self.connection.cursor()
 
-    def close(self):
-        """ Closes sqlite3 connection """
-        self.connection.close()
-
     def select(self, table_name):
         self.cur.execute(f"SELECT * FROM {table_name};")
 
@@ -38,12 +34,14 @@ class DatabaseHandler:
                             WHERE TaskName=(:old_name);",
                          {'new_name': new_task_name, 'new_details': new_task_details, 'old_name': task_name})
 
-    def executemany(self, sql_command):
-        self.cur.executemany(sql_command)
-
     def create_table(self, table_name):
         self.cur.execute(f""" CREATE TABLE IF NOT EXISTS {table_name}(  TaskName text, \
                                                                         TaskDetails text)""")
+
+    def transfer_data_between_tables(self, table1_name, table2_name, key_value):
+        self.cur.execute(f"INSERT INTO {table2_name} SELECT * FROM {table1_name} WHERE TaskName=(:value);",
+                         {'value': key_value})
+        self.delete(table1_name, key_value)
 
     def drop_table(self, table_name):
         self.cur.execute(f"DROP TABLE IF EXISTS {table_name}")
@@ -65,6 +63,8 @@ if __name__ == "__main__":
 
     with DatabaseHandler() as train_db:
         train_db.create_table('tasks')
+        train_db.drop_table('archive')
+        train_db.create_table('archive')
 
     path = os.path.relpath(r'../data/task_list.txt')
 
@@ -75,11 +75,12 @@ if __name__ == "__main__":
     print(data)
 
     with DatabaseHandler() as train_db:
-        for num, item in enumerate(data):
-            for key in item:
-                print(num, key, item[key])
-                train_db.insert("tasks", key, item[key])
+        # for num, item in enumerate(data):
+        #     for key in item:
+        #         print(num, key, item[key])
+        #         train_db.insert("tasks", key, item[key])
         train_db.select('tasks')
         rows = train_db.cur.fetchall()
         print(rows)
         train_db.update('tasks', 'Clean up the mess', 'Clean up', 'You should clean up your kitchen!')
+        train_db.transfer_data_between_tables('tasks', 'archive', 'Clean up')

@@ -18,14 +18,14 @@ Current version of the app looks as follows:
 ### Current features
 - addition of tasks;
 - edition of existing tasks;
-- deleting chosen tasks;
+- removal of chosen tasks;
 - random motivational quote for extra MOTIVATION;
 
 ### Features to work on
 - [ ] redesign of the app's window view;
 - [x] <s>adding a database to store and handle app's data;</s>
 - [ ] adding a feature of "deadline" of given task;
-- [ ] archiving of fulfilled tasks;
+- [ ] archiving of fulfilled tasks; 🚧
 
 ### Launch
 🚧🚧🚧
