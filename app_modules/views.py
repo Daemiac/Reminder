@@ -5,7 +5,8 @@ from PyQt5.QtWidgets import (
     QWidget,
     QVBoxLayout,
     QHBoxLayout,
-    QGroupBox
+    QGroupBox,
+    QTabWidget
 )
 from PyQt5.QtCore import Qt
 
@@ -182,7 +183,9 @@ class TaskInfoWidget(QWidget):
 
     def create_deadline_widget(self):
         self.deadline_date = QtWidgets.QTextBrowser(self)
-        self.deadline_date.setObjectName("task_details_text")
+        self.deadline_date.setObjectName("deadline_date")
+        self.deadline_date.setMinimumHeight(50)
+        self.deadline_date.setMaximumHeight(75)
         self.deadline_date.append("Date of expiratory goes here!")
         self.deadline_date.setStyleSheet(widget_styles.task_details_text_stylesheet)
 
