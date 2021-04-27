@@ -20,12 +20,14 @@ task_list_label_stylesheet = """
 task_list_stylesheet = """
 
 #task_list_widget{
+    height: 500px; 
     background-color: #282828;
     color: #B3B3B3;
     font-size: 10pt;
     font-weight: bold;
     padding-top: 2px;
     padding-left: 2px;
+    padding-bottom: 15px;
     border-radius: 5;
     alternate-background-color: #212121;
 }

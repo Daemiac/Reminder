@@ -20,8 +20,8 @@ class AppView(QMainWindow):
         self.title = "Reminder alpha ver"
         self.x_position = 400
         self.y_position = 300
-        self.width = 1065
-        self.height = 575
+        self.width = 1065 #1065
+        self.height = 625   #575
         self.setWindowTitle(self.title)
         self.setFixedSize(self.width, self.height)
         # self.setGeometry(self.x_position, self.y_position, self.width, self.height)
@@ -45,7 +45,7 @@ class AppView(QMainWindow):
         """ Creates layout of child widgets """
         minor_layout = QHBoxLayout()
         minor_layout.addWidget(self.first_widget)
-        minor_layout.addStretch(1)
+        #minor_layout.addStretch(1)
         minor_layout.addWidget(self.second_widget)
         self.generalLayout.addLayout(minor_layout)
         self.generalLayout.addStretch(1)
@@ -57,7 +57,7 @@ class TaskListWidget(QWidget):
     def __init__(self):
         super().__init__()
         self.width = 400
-        self.height = 500
+        self.height = 550
         self.main_layout = QVBoxLayout()
         self.task_list = None
 
@@ -88,7 +88,7 @@ class TaskListWidget(QWidget):
     def create_task_list_widget(self):
         """ Sets up task list widget and its properties """
         self.task_list_widget = QtWidgets.QListWidget(self)
-        self.task_list_widget.setMinimumSize(250, 400)
+        self.task_list_widget.setMinimumSize(250, 450)
         self.task_list_widget.setObjectName("task_list_widget")
         self.task_list_widget.setStyleSheet(widget_styles.task_list_stylesheet)
         self.main_layout.addWidget(self.task_list_widget)
@@ -132,17 +132,21 @@ class TaskInfoWidget(QWidget):
     def __init__(self):
         super().__init__()
         self.width = 700
-        self.height = 500
+        self.height = 550
         self.setFixedWidth(self.width)
         self.setFixedHeight(self.height)
         self.main_layout = QVBoxLayout()
 
         self.task_details_label = None
         self.task_details_text = None
+        self.deadline_label = None
+        self.deadline_date = None
 
         # Create inner widgets
         self.create_task_details_label()
         self.create_task_details_widget()
+        self.create_deadline_label()
+        self.create_deadline_widget()
 
         self.setLayout(self.main_layout)
 
@@ -165,6 +169,24 @@ class TaskInfoWidget(QWidget):
         self.task_details_text.setStyleSheet(widget_styles.task_details_text_stylesheet)
 
         self.main_layout.addWidget(self.task_details_text)
+
+    def create_deadline_label(self):
+        self.deadline_label = QtWidgets.QLabel(self)
+        self.deadline_label.setAlignment(Qt.AlignCenter)
+        self.deadline_label.setText("Deadline date:")
+        self.deadline_label.setObjectName("task_details_label")
+        self.deadline_label.setStyleSheet(widget_styles.task_details_label_stylesheet)
+        self.deadline_label.adjustSize()
+
+        self.main_layout.addWidget(self.deadline_label)
+
+    def create_deadline_widget(self):
+        self.deadline_date = QtWidgets.QTextBrowser(self)
+        self.deadline_date.setObjectName("task_details_text")
+        self.deadline_date.append("Date of expiratory goes here!")
+        self.deadline_date.setStyleSheet(widget_styles.task_details_text_stylesheet)
+
+        self.main_layout.addWidget(self.deadline_date)
 
     def update_quest_info(self, item_clicked):
         """ Method responsible for updating task detail widget's content """

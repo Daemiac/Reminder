@@ -22,9 +22,9 @@ Current version of the app looks as follows:
 - random motivational quote for extra MOTIVATION;
 
 ### Features to work on
-- [ ] redesign of the app's window view;
+- [ ] redesign of the app's window view; 🚧
 - [x] <s>adding a database to store and handle app's data;</s>
-- [ ] adding a feature of "deadline" of given task;
+- [ ] adding a feature of "deadline" of given task; 🚧
 - [ ] archiving of fulfilled tasks; 🚧
 
 ### Launch
