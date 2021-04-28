@@ -25,7 +25,7 @@ class AppController:
         self._view.first_widget.add_button.clicked.connect(self.add_task_window)
         self._view.first_widget.update_button.clicked.connect(self.change_task_details)
         self._view.first_widget.arch_button.clicked.connect(self.delete_task)
-        self._view.third_widget.close_button.clicked.connect(self._close_the_app)
+        self._view.bottom_widget.close_button.clicked.connect(self._close_the_app)
         self._view.first_widget.task_list_widget.itemClicked.connect(self.update_task_info)
 
     def _connect_dialog_signals(self):
@@ -41,7 +41,7 @@ class AppController:
     def update_motivational_quote(self):
         """ Updates motivational quote widget's content with appropriate models' attribute """
         chosen_quote = self._mot_model.quote
-        self._view.third_widget.set_motivational_quote(chosen_quote)
+        self._view.bottom_widget.set_motivational_quote(chosen_quote)
 
     @staticmethod
     def obtain_task_list_item(item_clicked):

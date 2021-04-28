@@ -6,6 +6,38 @@ app_window_stylesheet = """
 
 """
 
+title_label_stylesheet = """
+
+#title_label{
+    background-color: #232323;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 30px;
+    padding-right: 30px;
+    
+    font-weight: bold; 
+    font-family: Verdana; 
+    color: #B3B3B3; 
+    font-size: 14pt
+
+}
+"""
+
+clock_stylesheet = """
+#clock{
+    background-color: #232323;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    
+    font-weight: bold; 
+    font-family: Verdana; 
+    color: #1db954; 
+    font-size: 11pt
+}
+"""
+
 task_list_label_stylesheet = """
 
 #task_list_label{

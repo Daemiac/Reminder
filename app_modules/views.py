@@ -17,12 +17,13 @@ class AppView(QMainWindow):
     """ Class responsible for rendering view of the app """
     def __init__(self):
         super().__init__()
+
         # Set main window's properties
         self.title = "Reminder alpha ver"
         self.x_position = 400
         self.y_position = 300
-        self.width = 1065 #1065
-        self.height = 625   #575
+        self.width = 1200 #1065
+        self.height = 800   #575
         self.setWindowTitle(self.title)
         self.setFixedSize(self.width, self.height)
         # self.setGeometry(self.x_position, self.y_position, self.width, self.height)
@@ -36,21 +37,62 @@ class AppView(QMainWindow):
         self._centralWidget.setLayout(self.generalLayout)
 
         # Create child widgets
+        self.zero_widget = TitleClockWidget()
         self.first_widget = TaskListWidget()
         self.second_widget = TaskInfoWidget()
-        self.third_widget = BottomWidget()
+        self.bottom_widget = BottomWidget()
 
         self.render_view()
 
     def render_view(self):
         """ Creates layout of child widgets """
+        self.generalLayout.addWidget(self.zero_widget)
         minor_layout = QHBoxLayout()
         minor_layout.addWidget(self.first_widget)
         #minor_layout.addStretch(1)
         minor_layout.addWidget(self.second_widget)
         self.generalLayout.addLayout(minor_layout)
         self.generalLayout.addStretch(1)
-        self.generalLayout.addWidget(self.third_widget)
+        self.generalLayout.addWidget(self.bottom_widget)
+
+
+class TitleClockWidget(QWidget):
+    """ Renders title label and clock widget"""
+    def __init__(self):
+        super().__init__()
+        self.width = 1000
+        self.height = 100
+        self.main_layout = QHBoxLayout()
+
+        # initializing widgets
+        self.title_widget = None
+        self.clock_widget = None
+
+        self.create_title_widget()
+        self.create_clock_widget()
+
+        self.setLayout(self.main_layout)
+
+    def create_title_widget(self):
+        self.title_widget = QtWidgets.QLabel(self)
+        self.title_widget.setAlignment(Qt.AlignCenter)
+        self.title_widget.setText("REMINDER - stay disciplined and productive!")
+        self.title_widget.setObjectName("title_label")
+        self.title_widget.setStyleSheet(widget_styles.title_label_stylesheet)
+        #self.title_widget.adjustSize()
+
+        self.main_layout.addWidget(self.title_widget)
+
+    def create_clock_widget(self):
+        self.clock_widget = QtWidgets.QLabel(self)
+        self.clock_widget.setAlignment(Qt.AlignCenter)
+        self.clock_widget.setText("Wednesday 00:00:00")
+        self.clock_widget.setObjectName("clock")
+        self.clock_widget.setStyleSheet(widget_styles.clock_stylesheet)
+        self.clock_widget.adjustSize()
+
+        self.main_layout.addStretch(1)
+        self.main_layout.addWidget(self.clock_widget)
 
 
 class TaskListWidget(QWidget):
