@@ -94,8 +94,10 @@ class TabWidget(QWidget):
     """ Content of the app """
     def __init__(self):
         super().__init__()
-        self.width = 1000
+        self.width = 800
         self.height = 500
+        self.setObjectName("tab_window")
+        self.setStyleSheet(widget_styles.tab_window_stylesheet)
 
         self.main_layout = QHBoxLayout()
 

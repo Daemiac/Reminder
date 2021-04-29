@@ -18,7 +18,6 @@ def main():
     view.show()
     # instance of the controller
     ctrl = AppController(view=view, model=model)
-
     sys.exit(app.exec_())
 
 

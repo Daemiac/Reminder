@@ -6,6 +6,36 @@ app_window_stylesheet = """
 
 """
 
+tab_window_stylesheet = """
+QTabWidget::pane {
+    background-color: #343434;
+    border: 2px solid #C2C7CB;
+    border-radius: 5px;
+}
+
+QTabBar::tab {
+    background: gray;
+    margin-left: 5px;
+    padding: 10px;
+    min-width: 100px;
+    
+    font: bold;
+    color: #FFFFFF;
+}
+
+QTabBar::tab:selected {
+    background: lightblue;
+    margin-left: 5px;
+    padding: 10px;
+    
+    font: bold;
+    color: #FFFFFF;
+    color: green;
+    
+}
+
+"""
+
 title_label_stylesheet = """
 
 #title_label{
@@ -43,7 +73,7 @@ task_list_label_stylesheet = """
 #task_list_label{
     font-weight: bold; 
     font-family: Verdana; 
-    color: #121212; 
+    color: #FFFFFF; 
     font-size: 11pt
 }
 
