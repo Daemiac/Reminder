@@ -37,21 +37,23 @@ class AppView(QMainWindow):
         self._centralWidget.setLayout(self.generalLayout)
 
         # Create child widgets
-        self.zero_widget = TitleClockWidget()
-        self.first_widget = TaskListWidget()
-        self.second_widget = TaskInfoWidget()
+        self.top_widget = TitleClockWidget()
+        self.tab_widget = TabWidget()
+        #self.first_widget = TaskListWidget()
+        #self.second_widget = TaskInfoWidget()
         self.bottom_widget = BottomWidget()
 
         self.render_view()
 
     def render_view(self):
         """ Creates layout of child widgets """
-        self.generalLayout.addWidget(self.zero_widget)
-        minor_layout = QHBoxLayout()
-        minor_layout.addWidget(self.first_widget)
-        #minor_layout.addStretch(1)
-        minor_layout.addWidget(self.second_widget)
-        self.generalLayout.addLayout(minor_layout)
+        self.generalLayout.addWidget(self.top_widget)
+        self.generalLayout.addWidget(self.tab_widget)
+        # minor_layout = QHBoxLayout()
+        # minor_layout.addWidget(self.first_widget)
+        # #minor_layout.addStretch(1)
+        # minor_layout.addWidget(self.second_widget)
+        # self.generalLayout.addLayout(minor_layout)
         self.generalLayout.addStretch(1)
         self.generalLayout.addWidget(self.bottom_widget)
 
@@ -93,6 +95,29 @@ class TitleClockWidget(QWidget):
 
         self.main_layout.addStretch(1)
         self.main_layout.addWidget(self.clock_widget)
+
+
+class TabWidget(QWidget):
+    """ Content of the app """
+    def __init__(self):
+        super().__init__()
+        self.width = 1000
+        self.height = 500
+
+        self.main_layout = QHBoxLayout()
+
+        self.tabs = QTabWidget()
+        self.tab1 = QWidget()
+        self.tab2 = QWidget()
+        self.tab3 = QWidget()
+
+        self.tabs.addTab(self.tab1, "Main page")
+        self.tabs.addTab(self.tab2, "Details")
+        self.tabs.addTab(self.tab3, "Archive")
+        self.tabs.resize(300, 200)
+
+        self.main_layout.addWidget(self.tabs)
+        self.setLayout(self.main_layout)
 
 
 class TaskListWidget(QWidget):
