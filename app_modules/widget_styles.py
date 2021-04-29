@@ -43,7 +43,7 @@ task_list_label_stylesheet = """
 #task_list_label{
     font-weight: bold; 
     font-family: Verdana; 
-    color: #FFFFFF; 
+    color: #121212; 
     font-size: 11pt
 }
 

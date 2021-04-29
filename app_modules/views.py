@@ -39,8 +39,6 @@ class AppView(QMainWindow):
         # Create child widgets
         self.top_widget = TitleClockWidget()
         self.tab_widget = TabWidget()
-        #self.first_widget = TaskListWidget()
-        #self.second_widget = TaskInfoWidget()
         self.bottom_widget = BottomWidget()
 
         self.render_view()
@@ -49,11 +47,6 @@ class AppView(QMainWindow):
         """ Creates layout of child widgets """
         self.generalLayout.addWidget(self.top_widget)
         self.generalLayout.addWidget(self.tab_widget)
-        # minor_layout = QHBoxLayout()
-        # minor_layout.addWidget(self.first_widget)
-        # #minor_layout.addStretch(1)
-        # minor_layout.addWidget(self.second_widget)
-        # self.generalLayout.addLayout(minor_layout)
         self.generalLayout.addStretch(1)
         self.generalLayout.addWidget(self.bottom_widget)
 
@@ -107,15 +100,31 @@ class TabWidget(QWidget):
         self.main_layout = QHBoxLayout()
 
         self.tabs = QTabWidget()
-        self.tab1 = QWidget()
-        self.tab2 = QWidget()
-        self.tab3 = QWidget()
+        self.main_tab = QWidget()
+        self.overview_tab = QWidget()
+        self.archive_tab = QWidget()
 
-        self.tabs.addTab(self.tab1, "Main page")
-        self.tabs.addTab(self.tab2, "Details")
-        self.tabs.addTab(self.tab3, "Archive")
-        self.tabs.resize(300, 200)
+        # creation of child widgets
+        self.task_list_widget = TaskListWidget()
+        self.task_info_widget = TaskInfoWidget()
 
+        # add tabs
+        self.tabs.addTab(self.main_tab, "Main page")
+        self.tabs.addTab(self.overview_tab, "Details")
+        self.tabs.addTab(self.archive_tab, "Archive")
+
+        # main_tab layout
+        self.main_tab_layout = QHBoxLayout()
+        self.main_tab_layout.addWidget(self.task_list_widget)
+        self.main_tab_layout.addStretch(1)
+        self.main_tab_layout.addWidget(self.task_info_widget)
+        self.main_tab.setLayout(self.main_tab_layout)
+
+        # overview_tab layout
+
+        # archive_tab layout
+
+        # setting main layout
         self.main_layout.addWidget(self.tabs)
         self.setLayout(self.main_layout)
 
