@@ -12,6 +12,7 @@ from PyQt5.QtCore import Qt
 
 from app_modules import widget_styles
 
+# TODO Tidy up views module classes into one universal pattern
 
 class AppView(QMainWindow):
     """ Class responsible for rendering view of the app """
@@ -66,6 +67,8 @@ class TitleClockWidget(QWidget):
         self.create_title_widget()
         self.create_clock_widget()
 
+        self.update_clock()
+
         self.setLayout(self.main_layout)
 
     def create_title_widget(self):
@@ -74,7 +77,6 @@ class TitleClockWidget(QWidget):
         self.title_widget.setText("REMINDER - stay disciplined and productive!")
         self.title_widget.setObjectName("title_label")
         self.title_widget.setStyleSheet(widget_styles.title_label_stylesheet)
-        #self.title_widget.adjustSize()
 
         self.main_layout.addWidget(self.title_widget)
 
@@ -89,14 +91,19 @@ class TitleClockWidget(QWidget):
         self.main_layout.addStretch(1)
         self.main_layout.addWidget(self.clock_widget)
 
+    def update_clock(self, time="Monday 00:00:00"):
+        self.clock_widget.setText(time)
+
 
 class TabWidget(QWidget):
     """ Content of the app """
+    # TODO Tidy up class' design
     def __init__(self):
         super().__init__()
         self.width = 800
         self.height = 500
         self.setObjectName("tab_window")
+        # TODO update stylesheet of the tab widget to make it more eye-pleasing
         self.setStyleSheet(widget_styles.tab_window_stylesheet)
 
         self.main_layout = QHBoxLayout()
@@ -175,6 +182,7 @@ class TaskListWidget(QWidget):
     def create_buttons(self):
         """ Sets up widget's buttons and their properties """
         button_layout = QHBoxLayout()
+
         self.add_button = QtWidgets.QPushButton("Add task", self)
         self.add_button.setObjectName("add_button")
         self.add_button.setStyleSheet(widget_styles.add_button_stylesheet)
@@ -220,11 +228,13 @@ class TaskInfoWidget(QWidget):
         self.task_details_text = None
         self.deadline_label = None
         self.deadline_date = None
+        self.task_deadline_group_box = None
 
         # Create inner widgets
         self.create_task_details_label()
         self.create_task_details_widget()
-        self.create_deadline_label()
+        # self.create_deadline_label()
+        # self.create_deadline_widget()
         self.create_deadline_widget()
 
         self.setLayout(self.main_layout)
@@ -249,25 +259,24 @@ class TaskInfoWidget(QWidget):
 
         self.main_layout.addWidget(self.task_details_text)
 
-    def create_deadline_label(self):
-        self.deadline_label = QtWidgets.QLabel(self)
-        self.deadline_label.setAlignment(Qt.AlignCenter)
-        self.deadline_label.setText("Deadline date:")
-        self.deadline_label.setObjectName("task_details_label")
-        self.deadline_label.setStyleSheet(widget_styles.task_details_label_stylesheet)
-        self.deadline_label.adjustSize()
-
-        self.main_layout.addWidget(self.deadline_label)
-
     def create_deadline_widget(self):
-        self.deadline_date = QtWidgets.QTextBrowser(self)
-        self.deadline_date.setObjectName("deadline_date")
-        self.deadline_date.setMinimumHeight(50)
-        self.deadline_date.setMaximumHeight(75)
-        self.deadline_date.append("Date of expiratory goes here!")
-        self.deadline_date.setStyleSheet(widget_styles.task_details_text_stylesheet)
+        # self.task_deadline_group_box = QGroupBox()
+        # self.task_deadline_group_box.setObjectName("task_deadline_group_box")
 
-        self.main_layout.addWidget(self.deadline_date)
+        self.deadline_label = QtWidgets.QLabel("Deadline of the task:")
+        self.deadline_label.setObjectName("task_deadline_label")
+        self.deadline_label.setStyleSheet(widget_styles.task_deadline_label_stylesheet)
+
+        self.deadline_date = QtWidgets.QLabel("30.04.2021")
+        self.deadline_label.setObjectName("task_deadline_date")
+        #self.deadline_date.setObjectName(widget_styles.task_deadline_date_stylesheet)
+
+        deadline_layout = QHBoxLayout()
+        deadline_layout.addWidget(self.deadline_label)
+        deadline_layout.addWidget(self.deadline_date)
+        #self.task_deadline_group_box.setLayout(deadline_layout)
+
+        self.main_layout.addLayout(deadline_layout)
 
     def update_quest_info(self, item_clicked):
         """ Method responsible for updating task detail widget's content """
@@ -317,6 +326,7 @@ class BottomWidget(QWidget):
 
 class AddDialog(QDialog):
     """ Class used to create dialog window widgets """
+    # TODO update AddDialog window view
     def __init__(self, title, mode, label1=None, label2=None):
         super(AddDialog, self).__init__()
         self.title = title

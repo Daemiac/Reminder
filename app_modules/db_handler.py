@@ -6,7 +6,7 @@ LOCATION_CONSTANT = os.path.relpath(r'data/task_list.sqlite')
 
 
 class DatabaseHandler:
-
+    #TODO Remodeling this class to be more redundant
     __DB_LOCATION = LOCATION_CONSTANT
 
     def __init__(self, db_location=None):

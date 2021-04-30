@@ -7,6 +7,7 @@ from app_modules.db_handler import DatabaseHandler
 
 
 class TaskListModel:
+    # TODO comment functionalities of this class
     def __init__(self):
         self.task_list = None
         self.db = None
@@ -75,3 +76,9 @@ class MotivationalQuoteModel:
             if self.quote["author"] is None or self.quote["author"] == "":
                 self.quote['author'] = 'Unknown'
             return True
+
+
+class ClockModel:
+    #TODO Develop functionality of this class
+    def __init__(self):
+        pass

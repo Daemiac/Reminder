@@ -14,23 +14,35 @@ QTabWidget::pane {
 }
 
 QTabBar::tab {
-    background: gray;
-    margin-left: 5px;
+    background: #535353;
+    margin-left: 10px;
     padding: 10px;
     min-width: 100px;
     
     font: bold;
     color: #FFFFFF;
+    
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
 }
 
-QTabBar::tab:selected {
-    background: lightblue;
-    margin-left: 5px;
+QTabBar::tab:hover {
+    background: gray;
+    margin-left: 10px;
     padding: 10px;
     
     font: bold;
     color: #FFFFFF;
-    color: green;
+    
+}
+
+QTabBar::tab:selected {
+    background: #C2C7CB;
+    margin-left: 10px;
+    padding: 10px;
+    
+    font: bold;
+    color: #1db954;
     
 }
 
@@ -119,7 +131,6 @@ add_button_stylesheet = """
     border-radius: 10;
 }
 #add_button::hover{
-    background-color: #383838; 
     font-weight: bold; 
     color: #FFFFFF; 
     border-radius: 10;
@@ -135,8 +146,7 @@ update_button_stylesheet = """
     color: #B3B3B3; 
     border-radius: 10;
 }
-#update_button::hover{
-    background-color: #383838; 
+#update_button::hover{ 
     font-weight: bold; 
     color: #FFFFFF; 
     border-radius: 10;
@@ -153,7 +163,6 @@ arch_button_stylesheet = """
     border-radius: 10;
 }
 #arch_button::hover{
-    background-color: #383838; 
     font-weight: bold; 
     color: #FFFFFF; 
     border-radius: 10;
@@ -181,6 +190,28 @@ task_details_text_stylesheet = """
     font-size: 12pt;
     border-radius: 5;
 }
+"""
+
+task_deadline_label_stylesheet = """
+#task_deadline_label {
+    font-size: 9pt;
+    font-weight: bold;
+    color: #e4e6eb;
+}
+"""
+
+task_deadline_date_stylesheet = """
+#task_deadline_date {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 5px;
+    background-color: #e4e6eb;
+    color: #3a3b3c;
+    font-size: 9pt;
+    font-weight: bold;
+    border-radius: 3;
+}
+
 """
 
 mot_quote_stylesheet = """
