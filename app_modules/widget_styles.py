@@ -208,7 +208,7 @@ task_deadline_date_stylesheet = """
     padding-top: 5px;
     padding-bottom: 5px;
     padding-left: 5px;
-    color: #3a3b3c;
+    color: #FF0000;
     font-size: 10pt;
     font-weight: bold;
     border-radius: 5;

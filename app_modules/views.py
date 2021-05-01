@@ -259,7 +259,7 @@ class TaskInfoWidget(QWidget):
         self.main_layout.addWidget(self.task_details_text)
 
     def create_deadline_widget(self):
-
+        """ Sets up deadline widget and its properties """
         # creation and setting deadline_label widget
         self.deadline_label = QtWidgets.QLabel("Deadline of the task:")
         self.deadline_label.setAlignment(Qt.AlignCenter)
@@ -283,6 +283,9 @@ class TaskInfoWidget(QWidget):
     def update_quest_info(self, item_clicked):
         """ Method responsible for updating task detail widget's content """
         self.task_details_text.setText("Details: {}".format(item_clicked))
+
+    def update_deadline_info(self, deadline_date):
+        self.deadline_date.setText(deadline_date)
 
 
 class BottomWidget(QWidget):
