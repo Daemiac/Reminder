@@ -73,7 +73,7 @@ class MotivationalQuoteModel:
         if len(self.quote["text"]) > 90:
             return False
         else:
-            if self.quote["author"] is None or self.quote["author"] == "":
+            if self.quote["author"] is None or self.quote["author"] == "" or self.quote["author"] == "null":
                 self.quote['author'] = 'Unknown'
             return True
 

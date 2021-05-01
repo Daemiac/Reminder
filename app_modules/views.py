@@ -103,7 +103,6 @@ class TabWidget(QWidget):
         self.width = 800
         self.height = 500
         self.setObjectName("tab_window")
-        # TODO update stylesheet of the tab widget to make it more eye-pleasing
         self.setStyleSheet(widget_styles.tab_window_stylesheet)
 
         self.main_layout = QHBoxLayout()
@@ -260,22 +259,25 @@ class TaskInfoWidget(QWidget):
         self.main_layout.addWidget(self.task_details_text)
 
     def create_deadline_widget(self):
-        # self.task_deadline_group_box = QGroupBox()
-        # self.task_deadline_group_box.setObjectName("task_deadline_group_box")
 
+        # creation and setting deadline_label widget
         self.deadline_label = QtWidgets.QLabel("Deadline of the task:")
+        self.deadline_label.setAlignment(Qt.AlignCenter)
         self.deadline_label.setObjectName("task_deadline_label")
         self.deadline_label.setStyleSheet(widget_styles.task_deadline_label_stylesheet)
 
-        self.deadline_date = QtWidgets.QLabel("30.04.2021")
-        self.deadline_label.setObjectName("task_deadline_date")
-        #self.deadline_date.setObjectName(widget_styles.task_deadline_date_stylesheet)
+        # creation and setting deadline_date widget
+        self.deadline_date = QtWidgets.QLabel("")
+        self.deadline_date.setAlignment(Qt.AlignCenter)
+        self.deadline_date.setObjectName("task_deadline_date")
+        self.deadline_date.setStyleSheet(widget_styles.task_deadline_date_stylesheet)
 
+        # setting layout
         deadline_layout = QHBoxLayout()
         deadline_layout.addWidget(self.deadline_label)
         deadline_layout.addWidget(self.deadline_date)
-        #self.task_deadline_group_box.setLayout(deadline_layout)
 
+        # merging with main_layout
         self.main_layout.addLayout(deadline_layout)
 
     def update_quest_info(self, item_clicked):
@@ -321,7 +323,12 @@ class BottomWidget(QWidget):
 
     def set_motivational_quote(self, quote_dic):
         """ Method responsible for updating motivational quote widget's content """
-        self.mot_quote.setText(quote_dic["text"] + " - " + quote_dic["author"])
+        try:
+            self.mot_quote.setText(quote_dic["text"] + " - " + quote_dic["author"])
+
+        except TypeError:
+            print(type(quote_dic["text"]))
+            print(type(quote_dic["author"]))
 
 
 class AddDialog(QDialog):

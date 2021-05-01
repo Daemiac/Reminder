@@ -194,22 +194,24 @@ task_details_text_stylesheet = """
 
 task_deadline_label_stylesheet = """
 #task_deadline_label {
-    font-size: 9pt;
+    margin-top: 12px;
+    font-size: 12pt;
     font-weight: bold;
-    color: #e4e6eb;
+    color: #FFFFFF;
 }
 """
 
 task_deadline_date_stylesheet = """
 #task_deadline_date {
+    background-color: #B3B3B3;
+    margin-top: 12px;
     padding-top: 5px;
     padding-bottom: 5px;
     padding-left: 5px;
-    background-color: #e4e6eb;
     color: #3a3b3c;
-    font-size: 9pt;
+    font-size: 10pt;
     font-weight: bold;
-    border-radius: 3;
+    border-radius: 5;
 }
 
 """
