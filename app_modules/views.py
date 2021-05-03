@@ -97,7 +97,6 @@ class TitleClockWidget(QWidget):
 
 class TabWidget(QWidget):
     """ Content of the app """
-    # TODO Tidy up class' design
     def __init__(self):
         super().__init__()
         self.width = 800
@@ -105,34 +104,54 @@ class TabWidget(QWidget):
         self.setObjectName("tab_window")
         self.setStyleSheet(widget_styles.tab_window_stylesheet)
 
-        self.main_layout = QHBoxLayout()
+        # list of widget attributes
+        self.main_tab = None
+        self.overview_tab = None
+        self.archive_tab = None
+        self.task_list_widget = None
+        self.task_info_widget = None
+        self.main_tab_layout = None
 
+        # Creating tab widget and setting its tabs
         self.tabs = QTabWidget()
-        self.main_tab = QWidget()
-        self.overview_tab = QWidget()
-        self.archive_tab = QWidget()
+        self.create_main_tab()
+        self.create_overview_tab()
+        self.create_archive_tab()
 
-        # creation of child widgets
+        self.main_layout = QHBoxLayout()
+        self.set_layout()
+
+    def create_main_tab(self):
+        self.main_tab = QWidget()
+        self.tabs.addTab(self.main_tab, "Main page")
+        # Creation of child widgets
         self.task_list_widget = TaskListWidget()
         self.task_info_widget = TaskInfoWidget()
+        # Setting tabs' layout
+        self.set_main_tab_layout()
 
-        # add tabs
-        self.tabs.addTab(self.main_tab, "Main page")
+    def create_overview_tab(self):
+        self.overview_tab = QWidget()
         self.tabs.addTab(self.overview_tab, "Details")
+
+    def create_archive_tab(self):
+        self.archive_tab = QWidget()
         self.tabs.addTab(self.archive_tab, "Archive")
 
-        # main_tab layout
+    def set_main_tab_layout(self):
         self.main_tab_layout = QHBoxLayout()
         self.main_tab_layout.addWidget(self.task_list_widget)
         self.main_tab_layout.addStretch(1)
         self.main_tab_layout.addWidget(self.task_info_widget)
         self.main_tab.setLayout(self.main_tab_layout)
 
-        # overview_tab layout
+    def set_overview_tab_layout(self):
+        pass
 
-        # archive_tab layout
+    def set_archive_tab_layout(self):
+        pass
 
-        # setting main layout
+    def set_layout(self):
         self.main_layout.addWidget(self.tabs)
         self.setLayout(self.main_layout)
 
