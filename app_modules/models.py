@@ -70,7 +70,7 @@ class MotivationalQuoteModel:
 
     def is_quote_valid(self):
         """ Checks if quote's text length isn't bigger than 90 characters """
-        if len(self.quote["text"]) > 90:
+        if len(self.quote["text"]) > 85:
             return False
         else:
             if self.quote["author"] is None or self.quote["author"] == "" or self.quote["author"] == "null":

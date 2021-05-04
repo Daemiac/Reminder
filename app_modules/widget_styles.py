@@ -1,6 +1,6 @@
 app_window_stylesheet = """
 
-#app_window{
+#main_window{
     background-color: #121212;
 }
 
