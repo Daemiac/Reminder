@@ -409,7 +409,7 @@ class AddDialog(QDialog):
         self.create_dialog_buttons()
 
         self.main_layout = QVBoxLayout()
-        self.setLayout(self.main_layout)
+        self.set_window_layout()
 
     def create_task_title_group_box(self):
         """ Creates group box with task title related widgets """
@@ -477,6 +477,8 @@ class AddDialog(QDialog):
 
         self.cancel_button = QtWidgets.QPushButton("Cancel", self)
         self.cancel_button.setObjectName("cancel_button")
+
+        self.set_dialog_buttons_layout()
 
     def set_dialog_buttons_layout(self):
         self.button_layout = QHBoxLayout()
