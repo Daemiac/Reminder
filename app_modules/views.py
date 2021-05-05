@@ -373,8 +373,8 @@ class AddDialog(QDialog):
         self.text1 = label1
         self.text2 = label2
 
-        self.setFixedWidth(500)
-        self.setFixedHeight(400)
+        self.setFixedWidth(550)
+        self.setFixedHeight(550)
         self.setWindowTitle(self.title)
         self.setWindowModality(Qt.ApplicationModal)
         self.setObjectName("dialog_window")
@@ -385,12 +385,16 @@ class AddDialog(QDialog):
         self.task_details_group_box = None
         self.task_details_label = None
         self.task_details_edit = None
+        self.task_deadline_group_box = None
+        self.task_deadline_label = None
+        self.task_deadline_edit = None
         self.save_button = None
         self.cancel_button = None
 
         self.main_layout = QVBoxLayout()
         self.create_task_title_group_box()
         self.create_task_details_group_box()
+        self.create_task_deadline_group_box()
         self.create_dialog_buttons()
         self.setLayout(self.main_layout)
 
@@ -432,6 +436,25 @@ class AddDialog(QDialog):
         self.task_details_group_box.setLayout(task_details_layout)
 
         self.main_layout.addWidget(self.task_details_group_box)
+
+    def create_task_deadline_group_box(self):
+        """ Creates group box with task details related widgets """
+        self.task_deadline_group_box = QGroupBox()
+        self.task_deadline_group_box.setObjectName("task_deadline_group_box")
+
+        self.task_deadline_label = QtWidgets.QLabel("Add deadline date")
+        self.task_deadline_label.setObjectName("task_deadline_label")
+
+        self.task_deadline_edit = QtWidgets.QLineEdit("Deadline in day-month-year format")
+        self.task_deadline_edit.setObjectName("task_deadline_edit")
+        self.task_deadline_edit.setMaxLength(35)
+
+        task_deadline_layout = QVBoxLayout()
+        task_deadline_layout.addWidget(self.task_deadline_label)
+        task_deadline_layout.addWidget(self.task_deadline_edit)
+        self.task_deadline_group_box.setLayout(task_deadline_layout)
+
+        self.main_layout.addWidget(self.task_deadline_group_box)
 
     def create_dialog_buttons(self):
         """ Sets up dialog's window bottom buttons and their properties """

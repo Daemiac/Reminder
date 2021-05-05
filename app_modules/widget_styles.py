@@ -301,6 +301,30 @@ dialog_style_sheet = """
     font-size: 9pt;
 }
 
+#task_deadline_group_box{
+    margin-bottom: 5px;
+    padding-bottom: 10px;
+    background-color: #3a3b3c;
+    border-radius: 10;
+}
+
+#task_deadline_label{
+    font-size: 9pt;
+    font-weight: bold;
+    color: #e4e6eb;
+}
+
+#task_deadline_edit{
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 5px;
+    background-color: #e4e6eb;
+    color: #3a3b3c;
+    font-size: 9pt;
+    font-weight: bold;
+    border-radius: 3;
+}
+
 #save_button{
     width: 100px;
     height: 30px;
