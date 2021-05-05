@@ -327,11 +327,11 @@ class BottomWidget(QWidget):
         self.mot_quote = None
         self.close_button = None
 
-        self.main_layout = QHBoxLayout()
         self.create_motivational_quote()
         self.create_close_button()
 
-        self.setLayout(self.main_layout)
+        self.main_layout = QHBoxLayout()
+        self.set_widgets_layout()
 
     def create_motivational_quote(self):
         """ Sets up motivational quote widget and its properties """
@@ -341,8 +341,6 @@ class BottomWidget(QWidget):
         self.mot_quote.setStyleSheet(widget_styles.mot_quote_stylesheet)
         self.mot_quote.adjustSize()
 
-        self.main_layout.addWidget(self.mot_quote)
-
     def create_close_button(self):
         """ Sets up additional app's close button and its properties """
         self.close_button = QtWidgets.QPushButton("Close app", self)
@@ -351,7 +349,10 @@ class BottomWidget(QWidget):
         self.close_button.setFixedWidth(100)
         self.close_button.setFixedHeight(30)
 
+    def set_widgets_layout(self):
+        self.main_layout.addWidget(self.mot_quote)
         self.main_layout.addWidget(self.close_button)
+        self.setLayout(self.main_layout)
 
     def set_motivational_quote(self, quote_dic):
         """ Method responsible for updating motivational quote widget's content """
@@ -364,41 +365,51 @@ class BottomWidget(QWidget):
 
 
 class AddDialog(QDialog):
-    """ Class used to create dialog window widgets """
+    """ Class used to create dialog window responsible for addition or manipulation of tasks data """
     # TODO update AddDialog window view
-    def __init__(self, title, mode, label1=None, label2=None):
+    def __init__(self, title, mode, task_title=None, task_details=None):
         super(AddDialog, self).__init__()
+
         self.title = title
         self.mode = mode
-        self.text1 = label1
-        self.text2 = label2
 
+        # Window properties
         self.setFixedWidth(550)
         self.setFixedHeight(550)
         self.setWindowTitle(self.title)
         self.setWindowModality(Qt.ApplicationModal)
         self.setObjectName("dialog_window")
+        self.setStyleSheet(widget_styles.dialog_style_sheet)
 
+        # Data passed through instantiation
+        self.task_title_entry = task_title
+        self.task_details_entry = task_details
+
+        # Declaration of widgets
         self.task_title_group_box = None
         self.task_title_label = None
         self.task_title_edit = None
+        self.task_title_layout = None
         self.task_details_group_box = None
         self.task_details_label = None
         self.task_details_edit = None
+        self.task_details_layout = None
         self.task_deadline_group_box = None
         self.task_deadline_label = None
         self.task_deadline_edit = None
+        self.task_deadline_layout = None
         self.save_button = None
         self.cancel_button = None
+        self.button_layout = None
 
-        self.main_layout = QVBoxLayout()
+        # Creation of child widgets
         self.create_task_title_group_box()
         self.create_task_details_group_box()
         self.create_task_deadline_group_box()
         self.create_dialog_buttons()
-        self.setLayout(self.main_layout)
 
-        self.setStyleSheet(widget_styles.dialog_style_sheet)
+        self.main_layout = QVBoxLayout()
+        self.setLayout(self.main_layout)
 
     def create_task_title_group_box(self):
         """ Creates group box with task title related widgets """
@@ -408,16 +419,17 @@ class AddDialog(QDialog):
         self.task_title_label = QtWidgets.QLabel("Task title")
         self.task_title_label.setObjectName("task_title_label")
 
-        self.task_title_edit = QtWidgets.QLineEdit(self.text1)
+        self.task_title_edit = QtWidgets.QLineEdit(self.task_title_entry)
         self.task_title_edit.setObjectName("task_title_edit")
         self.task_title_edit.setMaxLength(35)
 
-        task_title_layout = QVBoxLayout()
-        task_title_layout.addWidget(self.task_title_label)
-        task_title_layout.addWidget(self.task_title_edit)
-        self.task_title_group_box.setLayout(task_title_layout)
+        self.set_task_title_group_box_layout()
 
-        self.main_layout.addWidget(self.task_title_group_box)
+    def set_task_title_group_box_layout(self):
+        self.task_title_layout = QVBoxLayout()
+        self.task_title_layout.addWidget(self.task_title_label)
+        self.task_title_layout.addWidget(self.task_title_edit)
+        self.task_title_group_box.setLayout(self.task_title_layout)
 
     def create_task_details_group_box(self):
         """ Creates group box with task details related widgets """
@@ -427,15 +439,16 @@ class AddDialog(QDialog):
         self.task_details_label = QtWidgets.QLabel("Task details")
         self.task_details_label.setObjectName("task_details_label")
 
-        self.task_details_edit = QtWidgets.QTextEdit(self.text2)
+        self.task_details_edit = QtWidgets.QTextEdit(self.task_details_entry)
         self.task_details_edit.setObjectName("task_details_edit")
 
-        task_details_layout = QVBoxLayout()
-        task_details_layout.addWidget(self.task_details_label)
-        task_details_layout.addWidget(self.task_details_edit)
-        self.task_details_group_box.setLayout(task_details_layout)
+        self.set_task_details_group_box_layout()
 
-        self.main_layout.addWidget(self.task_details_group_box)
+    def set_task_details_group_box_layout(self):
+        self.task_details_layout = QVBoxLayout()
+        self.task_details_layout.addWidget(self.task_details_label)
+        self.task_details_layout.addWidget(self.task_details_edit)
+        self.task_details_group_box.setLayout(self.task_details_layout)
 
     def create_task_deadline_group_box(self):
         """ Creates group box with task details related widgets """
@@ -449,26 +462,34 @@ class AddDialog(QDialog):
         self.task_deadline_edit.setObjectName("task_deadline_edit")
         self.task_deadline_edit.setMaxLength(35)
 
-        task_deadline_layout = QVBoxLayout()
-        task_deadline_layout.addWidget(self.task_deadline_label)
-        task_deadline_layout.addWidget(self.task_deadline_edit)
-        self.task_deadline_group_box.setLayout(task_deadline_layout)
+        self.set_task_deadline_group_box_layout()
 
-        self.main_layout.addWidget(self.task_deadline_group_box)
+    def set_task_deadline_group_box_layout(self):
+        self.task_deadline_layout = QVBoxLayout()
+        self.task_deadline_layout.addWidget(self.task_deadline_label)
+        self.task_deadline_layout.addWidget(self.task_deadline_edit)
+        self.task_deadline_group_box.setLayout(self.task_deadline_layout)
 
     def create_dialog_buttons(self):
         """ Sets up dialog's window bottom buttons and their properties """
-        button_layout = QHBoxLayout()
-
         self.save_button = QtWidgets.QPushButton("Save", self)
         self.save_button.setObjectName("save_button")
-        button_layout.addWidget(self.save_button)
 
         self.cancel_button = QtWidgets.QPushButton("Cancel", self)
         self.cancel_button.setObjectName("cancel_button")
-        button_layout.addWidget(self.cancel_button)
 
-        self.main_layout.addLayout(button_layout)
+    def set_dialog_buttons_layout(self):
+        self.button_layout = QHBoxLayout()
+        self.button_layout.addWidget(self.save_button)
+        self.button_layout.addWidget(self.cancel_button)
+
+    def set_window_layout(self):
+        """ Sets layout of child widgets inside dialog window """
+        self.main_layout.addWidget(self.task_title_group_box)
+        self.main_layout.addWidget(self.task_details_group_box)
+        self.main_layout.addWidget(self.task_deadline_group_box)
+        self.main_layout.addLayout(self.button_layout)
+        self.setLayout(self.main_layout)
 
     @classmethod
     def create_add_dialog(cls):
@@ -477,6 +498,6 @@ class AddDialog(QDialog):
                          'Write your task details here')
 
     @classmethod
-    def create_change_det_dialog(cls, label1, label2):
+    def create_change_det_dialog(cls, task_title, task_details):
         """ Returns change-details type of dialog window object with given arguments """
-        return AddDialog("Task details update dialog window", False, label1, label2)
+        return AddDialog("Task details update dialog window", False, task_title, task_details)

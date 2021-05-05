@@ -65,7 +65,8 @@ class AppController:
 
     def change_task_details(self):
         """ Creates a dialog window which can be used to change details of the chosen task"""
-        self._dialog = AddDialog.create_change_det_dialog(label1=self.clicked_task, label2=self.clicked_task_info)
+        self._dialog = AddDialog.create_change_det_dialog(task_title=self.clicked_task,
+                                                          task_details=self.clicked_task_info)
         self._connect_dialog_signals()
         self._dialog.show()
 
