@@ -24,7 +24,7 @@ Current version of the app looks as follows:
 ### Features to work on
 - [ ] redesign of the app's window view; 🚧
 - [x] <s>adding a database to store and handle app's data;</s>
-- [ ] adding a feature of "deadline" of given task; 🚧
+- [x] <s>adding a feature of "deadline" of given task; </s>
 - [ ] archiving of fulfilled tasks; 🚧
 
 ### Launch
