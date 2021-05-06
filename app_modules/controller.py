@@ -15,6 +15,7 @@ class AppController:
 
         self.clicked_task = None
         self.clicked_task_info = None
+        self.clicked_task_deadline = None
 
         self.update_task_list()
         self.update_motivational_quote()
@@ -55,7 +56,9 @@ class AppController:
         # searching through list of tuples
         clicked_task_tuple = next(tpl for i, tpl in enumerate(self._model.task_list) if self.clicked_task in tpl)
         self.clicked_task_info = clicked_task_tuple[1]
+        self.clicked_task_deadline = clicked_task_tuple[2]
         self._view.tab_widget.task_info_widget.update_quest_info(self.clicked_task_info)
+        self._view.tab_widget.task_info_widget.update_deadline_info(self.clicked_task_deadline)
 
     def add_task_window(self):
         """ Creates a dialog window which can be used to add a task """
@@ -74,13 +77,14 @@ class AppController:
         """ Saves dialog window's entries to model's attribute, updates the view and closes dialog window """
         new_task_name = self._dialog.task_title_edit.text()
         new_task_details = self._dialog.task_details_edit.toPlainText()
+        new_task_deadline = self._dialog.task_deadline_edit.text()
         if self._dialog.mode:
-            self._model.add_task_to_db(new_task_name, new_task_details)
+            self._model.add_task_to_db(new_task_name, new_task_details, new_task_deadline)
             self.update_task_list()
             self._dialog.close()
             print("Dialog form has been accepted. The task has been added. Closing the dialog window...")
         else:
-            self._model.update_task_data(self.clicked_task, new_task_name, new_task_details)
+            self._model.update_task_data(self.clicked_task, new_task_name, new_task_details, new_task_deadline)
             self.update_task_list()
             self._dialog.close()
             print("Dialog form has been accepted. Chosen task details has been changed. Closing the dialog window...")
@@ -103,5 +107,6 @@ class AppController:
         """ Saves changes into external file and closes the app """
         # with DatabaseHandler() as db:
         #     db.drop_table('archive')
+        #     db.drop_table('tasks')
         print("Closing the app...")
         sys.exit()

@@ -367,7 +367,7 @@ class BottomWidget(QWidget):
 class AddDialog(QDialog):
     """ Class used to create dialog window responsible for addition or manipulation of tasks data """
     # TODO update AddDialog window view
-    def __init__(self, title, mode, task_title=None, task_details=None):
+    def __init__(self, title, mode, task_title=None, task_details=None, task_deadline=None):
         super(AddDialog, self).__init__()
 
         self.title = title
@@ -384,6 +384,7 @@ class AddDialog(QDialog):
         # Data passed through instantiation
         self.task_title_entry = task_title
         self.task_details_entry = task_details
+        self.task_deadline_entry = task_deadline
 
         # Declaration of widgets
         self.task_title_group_box = None

@@ -20,14 +20,14 @@ class TaskListModel:
             self.db.select('tasks')
             self.task_list = self.db.cur.fetchall()
 
-    def add_task_to_db(self, task, details):
+    def add_task_to_db(self, task, details, deadline):
         print("Adding task to database tryout")
         with DatabaseHandler() as self.db:
-            self.db.insert('tasks', task, details)
+            self.db.insert('tasks', task, details, deadline)
 
-    def update_task_data(self, task_name, new_task_name, new_details):
+    def update_task_data(self, task_name, new_task_name, new_details, new_deadline):
         with DatabaseHandler() as self.db:
-            self.db.update('tasks', task_name, new_task_name, new_details)
+            self.db.update('tasks', task_name, new_task_name, new_details, new_deadline)
 
     def delete_task_from_db(self, task):
         print("Let's try to delete task from db!")
