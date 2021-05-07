@@ -1,7 +1,7 @@
 import sys
 
 from app_modules.views import AppView, AddDialog
-from app_modules.models import TaskListModel, MotivationalQuoteModel
+from app_modules.models import TaskListModel, MotivationalQuoteModel, ClockModel
 from app_modules.db_handler import DatabaseHandler
 
 
@@ -11,6 +11,7 @@ class AppController:
         self._view = view
         self._model = model
         self._mot_model = MotivationalQuoteModel()
+        self._clock = ClockModel()
         self._dialog = None
 
         self.clicked_task = None
@@ -33,6 +34,9 @@ class AppController:
         """ Method responsible for connecting dialog window's signals with appropriate slot methods """
         self._dialog.save_button.clicked.connect(self.accept_dialog)
         self._dialog.cancel_button.clicked.connect(self.reject_dialog)
+
+    def update_clock(self):
+        self._view.top_widget.update_clock(self._clock.printable_time)
 
     def update_task_list(self):
         """ Updates task list widget's content with content of model's task list attribute """

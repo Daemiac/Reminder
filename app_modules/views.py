@@ -8,7 +8,7 @@ from PyQt5.QtWidgets import (
     QGroupBox,
     QTabWidget
 )
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QDateTime
 
 from app_modules import widget_styles
 
@@ -22,8 +22,8 @@ class AppView(QMainWindow):
         self.title = "Reminder beta ver"
         self.x_position = 400
         self.y_position = 300
-        self.width = 1200 #1065
-        self.height = 800   #575
+        self.width = 1200  # 1065
+        self.height = 800   # 575
         self.setWindowTitle(self.title)
         self.setFixedSize(self.width, self.height)
         # self.setGeometry(self.x_position, self.y_position, self.width, self.height)
@@ -65,7 +65,7 @@ class TitleClockWidget(QWidget):
         self.create_title_widget()
         self.create_clock_widget()
 
-        self.update_clock()
+        #self.update_clock()
 
         # setting layout
         self.main_layout = QHBoxLayout()
@@ -91,7 +91,8 @@ class TitleClockWidget(QWidget):
         self.main_layout.addStretch(1)
         self.main_layout.addWidget(self.clock_widget)
 
-    def update_clock(self, time="Monday 00:00:00"):
+    def update_clock(self, time):
+        #datetime = QDateTime.currentDateTime()
         self.clock_widget.setText(time)
 
 

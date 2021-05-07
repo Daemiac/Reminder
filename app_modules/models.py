@@ -3,6 +3,8 @@ import requests
 import json
 import os
 
+from PyQt5.QtCore import QTimer, QDateTime, QTime
+
 from app_modules.db_handler import DatabaseHandler
 
 
@@ -79,6 +81,16 @@ class MotivationalQuoteModel:
 
 
 class ClockModel:
-    #TODO Develop functionality of this class
+    # TODO Develop functionality of this class
     def __init__(self):
-        pass
+        self.timer = QTimer()
+        self.current_time = None
+        self.printable_time = None
+        self.timer.timeout.connect(self.return_time)
+        self.timer.start(1000)
+
+    def return_time(self):
+        self.current_time = QTime.currentTime()
+        self.printable_time = self.current_time.toString('hh:mm:ss')
+        print(self.current_time.toString('hh:mm:ss'))
+
