@@ -1,3 +1,5 @@
+import datetime
+
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import (
     QMainWindow,
@@ -8,7 +10,7 @@ from PyQt5.QtWidgets import (
     QGroupBox,
     QTabWidget
 )
-from PyQt5.QtCore import Qt, QDateTime
+from PyQt5.QtCore import Qt
 
 from app_modules import widget_styles
 
@@ -65,8 +67,6 @@ class TitleClockWidget(QWidget):
         self.create_title_widget()
         self.create_clock_widget()
 
-        #self.update_clock()
-
         # setting layout
         self.main_layout = QHBoxLayout()
         self.set_widgets_layout()
@@ -82,7 +82,7 @@ class TitleClockWidget(QWidget):
     def create_clock_widget(self):
         self.clock_widget = QtWidgets.QLabel(self)
         self.clock_widget.setAlignment(Qt.AlignCenter)
-        self.clock_widget.setText("Wednesday 00:00:00")
+        self.clock_widget.setText("01-01-2000 Monday 00:00:00")
         self.clock_widget.setObjectName("clock")
         self.clock_widget.setStyleSheet(widget_styles.clock_stylesheet)
 
@@ -91,9 +91,10 @@ class TitleClockWidget(QWidget):
         self.main_layout.addStretch(1)
         self.main_layout.addWidget(self.clock_widget)
 
-    def update_clock(self, time):
-        #datetime = QDateTime.currentDateTime()
-        self.clock_widget.setText(time)
+    def update_clock_label(self, time):
+        date = datetime.datetime.now()
+        day_of_week = date.strftime("%d-%m-%Y %A")
+        self.clock_widget.setText(f"{day_of_week} {time}")
 
 
 class TabWidget(QWidget):
@@ -210,6 +211,7 @@ class TaskListWidget(QWidget):
         self.update_button = QtWidgets.QPushButton("Update task", self)
         self.update_button.setObjectName("update_button")
         self.update_button.setStyleSheet(widget_styles.update_button_stylesheet)
+        #self.update_button.setEnabled(False)
         self.update_button.setFixedWidth(100)
         self.update_button.setFixedHeight(30)
 

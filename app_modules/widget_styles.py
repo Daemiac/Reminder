@@ -72,6 +72,7 @@ clock_stylesheet = """
     padding-bottom: 10px;
     padding-left: 20px;
     padding-right: 20px;
+    min-width: 360px;
     
     font-weight: bold; 
     font-family: Verdana; 

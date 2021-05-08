@@ -1,7 +1,9 @@
 import sys
 
+from PyQt5.QtCore import QTimer, QTime
+
 from app_modules.views import AppView, AddDialog
-from app_modules.models import TaskListModel, MotivationalQuoteModel, ClockModel
+from app_modules.models import TaskListModel, MotivationalQuoteModel
 from app_modules.db_handler import DatabaseHandler
 
 
@@ -11,13 +13,16 @@ class AppController:
         self._view = view
         self._model = model
         self._mot_model = MotivationalQuoteModel()
-        self._clock = ClockModel()
+        self._timer = None
         self._dialog = None
+
+        self.clock_thread = None
 
         self.clicked_task = None
         self.clicked_task_info = None
         self.clicked_task_deadline = None
 
+        self.run_timer()
         self.update_task_list()
         self.update_motivational_quote()
         self._connect_signals()
@@ -35,8 +40,17 @@ class AppController:
         self._dialog.save_button.clicked.connect(self.accept_dialog)
         self._dialog.cancel_button.clicked.connect(self.reject_dialog)
 
+    def run_timer(self):
+        """ Sets up QTimer object to elapse time between clock tics """
+        self._timer = QTimer()
+        self._timer.timeout.connect(self.update_clock)
+        self._timer.start(1000)
+
     def update_clock(self):
-        self._view.top_widget.update_clock(self._clock.printable_time)
+        """ Updates clock widget with current hour """
+        current_time = QTime.currentTime()
+        printable_time = current_time.toString('hh:mm:ss')
+        self._view.top_widget.update_clock_label(printable_time)
 
     def update_task_list(self):
         """ Updates task list widget's content with content of model's task list attribute """
