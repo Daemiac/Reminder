@@ -21,9 +21,10 @@ class DatabaseHandler:
     def select(self, table_name):
         self.cur.execute(f"SELECT * FROM {table_name};")
 
-    def insert(self, table_name, task_name, task_details, task_deadline):
-        self.cur.execute(f"INSERT INTO {table_name} VALUES (:task, :details, :deadline);",
-                         {'task': task_name, 'details': task_details, 'deadline': task_deadline})
+    def insert(self, table_name, task_name, task_details, task_addition_date, task_deadline):
+        self.cur.execute(f"INSERT INTO {table_name} VALUES (:task, :details, :add_date, :deadline);",
+                         {'task': task_name, 'details': task_details, 'add_date': task_addition_date,
+                          'deadline': task_deadline})
 
     def delete(self, table_name, record):
         self.cur.execute(f"DELETE FROM {table_name} WHERE TaskName=(:item);",
@@ -38,6 +39,7 @@ class DatabaseHandler:
     def create_table(self, table_name):
         self.cur.execute(f""" CREATE TABLE IF NOT EXISTS {table_name}(  TaskName text, \
                                                                         TaskDetails text, \
+                                                                        AdditionDate text, \
                                                                         TaskDeadline text)""")
 
     def transfer_data_between_tables(self, table1_name, table2_name, key_value):

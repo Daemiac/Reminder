@@ -2,6 +2,7 @@ import random
 import requests
 import json
 import os
+import datetime
 
 from app_modules.db_handler import DatabaseHandler
 
@@ -11,6 +12,8 @@ class TaskListModel:
     def __init__(self):
         self.task_list = None
         self.db = None
+
+        self.task_addition_date = datetime.datetime.now()
 
         self.retrieve_tasks_from_db()
 
@@ -22,8 +25,9 @@ class TaskListModel:
 
     def add_task_to_db(self, task, details, deadline):
         print("Adding task to database tryout")
+        print(self.task_addition_date.strftime("%d-%m-%Y"))
         with DatabaseHandler() as self.db:
-            self.db.insert('tasks', task, details, deadline)
+            self.db.insert('tasks', task, details, self.task_addition_date.strftime("%d-%m-%Y"), deadline)
 
     def update_task_data(self, task_name, new_task_name, new_details, new_deadline):
         with DatabaseHandler() as self.db:
