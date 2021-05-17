@@ -1,4 +1,5 @@
 import sys
+import logging
 
 from PyQt5.QtCore import QTimer, QTime
 
@@ -74,7 +75,7 @@ class AppController:
         # searching through list of tuples
         clicked_task_tuple = next(tpl for i, tpl in enumerate(self._model.task_list) if self.clicked_task in tpl)
         self.clicked_task_info = clicked_task_tuple[1]
-        self.clicked_task_deadline = clicked_task_tuple[2]
+        self.clicked_task_deadline = clicked_task_tuple[3]
         self._view.tab_widget.task_info_widget.update_quest_info(self.clicked_task_info)
         self._view.tab_widget.task_info_widget.update_deadline_info(self.clicked_task_deadline)
 
@@ -126,5 +127,5 @@ class AppController:
         # with DatabaseHandler() as db:
         #     db.drop_table('archive')
         #     db.drop_table('tasks')
-        print("Closing the app...")
+        logging.info("Shutting down the app...")
         sys.exit()
