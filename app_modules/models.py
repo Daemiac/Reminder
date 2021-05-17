@@ -1,4 +1,5 @@
 import random
+import logging
 import requests
 import json
 import os
@@ -24,25 +25,28 @@ class TaskListModel:
             self.task_list = self.db.cur.fetchall()
 
     def add_task_to_db(self, task, details, deadline):
-        print("Adding task to database tryout")
-        print(self.task_addition_date.strftime("%d-%m-%Y"))
+        logging.debug('Tryout of addition of a "%s" task to database', task)
         with DatabaseHandler() as self.db:
             self.db.insert('tasks', task, details, self.task_addition_date.strftime("%d-%m-%Y"), deadline)
+            logging.info('Task "%s" successfully added to a database', task)
 
     def update_task_data(self, task_name, new_task_name, new_details, new_deadline):
         with DatabaseHandler() as self.db:
             self.db.update('tasks', task_name, new_task_name, new_details, new_deadline)
+            logging.info('Task "%s" details changed', task_name)
 
     def delete_task_from_db(self, task):
-        print("Let's try to delete task from db!")
+        logging.debug('Tryout of deletion of a "%s" task from a database', task)
         with DatabaseHandler() as self.db:
             self.db.delete('tasks', task)
-            print("A task has been deleted from db!")
+            logging.info('Task "%s" successfully deleted from a database', task)
 
     def archive_task(self, task):
+        logging.debug('Tryout of archiving of a "%s" task', task)
         with DatabaseHandler() as self.db:
             self.db.create_table('archive')
             self.db.transfer_data_between_tables('tasks', 'archive', task)
+            logging.info('Task "%s" successfully archived', task)
 
 
 class MotivationalQuoteModel:
