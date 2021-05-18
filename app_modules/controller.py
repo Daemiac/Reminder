@@ -7,6 +7,8 @@ from app_modules.views import AppView, AddDialog
 from app_modules.models import TaskListModel, MotivationalQuoteModel
 from app_modules.db_handler import DatabaseHandler
 
+logger = logging.getLogger(__name__)
+
 
 class AppController:
     """ Mediates between model and view objects """
@@ -127,5 +129,5 @@ class AppController:
         # with DatabaseHandler() as db:
         #     db.drop_table('archive')
         #     db.drop_table('tasks')
-        logging.info("Shutting down the app...")
+        logger.info("Shutting down the app...")
         sys.exit()
