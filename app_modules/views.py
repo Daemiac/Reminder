@@ -1,4 +1,5 @@
 import datetime
+import logging
 
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import (
@@ -13,6 +14,9 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtCore import Qt
 
 from app_modules import widget_styles
+
+
+logger = logging.getLogger(__name__)
 
 
 class AppView(QMainWindow):

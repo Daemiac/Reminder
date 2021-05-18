@@ -7,7 +7,7 @@ import datetime
 
 from app_modules.db_handler import DatabaseHandler
 
-#model_logger = logging.getLogger('reminder.'+__name__)
+logger = logging.getLogger(__name__)
 
 
 class TaskListModel:
@@ -15,7 +15,6 @@ class TaskListModel:
     def __init__(self):
         self.task_list = None
         self.db = None
-        self.logger = logging.getLogger(__name__)
 
         self.task_addition_date = datetime.datetime.now()
 
@@ -28,28 +27,28 @@ class TaskListModel:
             self.task_list = self.db.cur.fetchall()
 
     def add_task_to_db(self, task, details, deadline):
-        self.logger.debug('Tryout of addition of a "%s" task to database', task)
+        logger.debug('Tryout of addition of a "%s" task to database', task)
         with DatabaseHandler() as self.db:
             self.db.insert('tasks', task, details, self.task_addition_date.strftime("%d-%m-%Y"), deadline)
-            self.logger.info('Task "%s" successfully added to a database', task)
+            logger.info('Task "%s" successfully added to a database', task)
 
     def update_task_data(self, task_name, new_task_name, new_details, new_deadline):
         with DatabaseHandler() as self.db:
             self.db.update('tasks', task_name, new_task_name, new_details, new_deadline)
-            self.logger.info('Task "%s" details changed', task_name)
+            logger.info('Task "%s" details changed', task_name)
 
     def delete_task_from_db(self, task):
-        self.logger.debug('Tryout of deletion of a "%s" task from a database', task)
+        logger.debug('Tryout of deletion of a "%s" task from a database', task)
         with DatabaseHandler() as self.db:
             self.db.delete('tasks', task)
-            self.logger.info('Task "%s" successfully deleted from a database', task)
+            logger.info('Task "%s" successfully deleted from a database', task)
 
     def archive_task(self, task):
-        self.logger.debug('Tryout of archiving of a "%s" task', task)
+        logger.debug('Tryout of archiving of a "%s" task', task)
         with DatabaseHandler() as self.db:
             self.db.create_table('archive')
             self.db.transfer_data_between_tables('tasks', 'archive', task)
-            self.logger.info('Task "%s" successfully archived', task)
+            logger.info('Task "%s" successfully archived', task)
 
 
 class MotivationalQuoteModel:

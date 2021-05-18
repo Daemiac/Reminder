@@ -1,6 +1,9 @@
 import sqlite3
 import os
+import logging
 import json
+
+logger = logging.getLogger(__name__)
 
 LOCATION_CONSTANT = os.path.relpath(r'data/task_list.sqlite')
 

@@ -25,7 +25,7 @@ def main():
 
 if __name__ == '__main__':
     # setting logger's config
-    logging.config.fileConfig('data/logging.conf', disable_existing_loggers=False)
+    logging.config.fileConfig('data/logger.conf', disable_existing_loggers=False)
     # setting up logger
     logger = logging.getLogger(__name__)
 
