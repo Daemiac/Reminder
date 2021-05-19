@@ -1,24 +1,22 @@
 #!/usr/bin/env python3
 
 import sys
-import logging
 import logging.config
 
 from PyQt5.QtWidgets import QApplication
 
-from app_modules.controller import AppController, TaskListModel, AppView
+from app_modules.views import AppView
+from app_modules.controller import AppController
 
 
 def main():
     # instance of 'QApplication'
     app = QApplication([])
-    # instance of the model
-    model = TaskListModel()
     # render the view
     view = AppView()
     view.show()
     # instance of the controller
-    ctrl = AppController(view=view, model=model)
+    ctrl = AppController(view=view)
     logger.info("Started a reminder app")
     sys.exit(app.exec_())
 

@@ -1,11 +1,10 @@
 import sqlite3
 import os
 import logging
-import json
 
 logger = logging.getLogger(__name__)
 
-LOCATION_CONSTANT = os.path.relpath(r'data/task_list.sqlite')
+LOCATION_CONSTANT = os.path.relpath(r'data/app_data.sqlite')
 
 
 class DatabaseHandler:
@@ -64,30 +63,3 @@ class DatabaseHandler:
         else:
             self.connection.commit()
         self.connection.close()
-
-
-if __name__ == "__main__":
-
-    with DatabaseHandler() as train_db:
-        train_db.create_table('tasks')
-        train_db.drop_table('archive')
-        train_db.create_table('archive')
-
-    path = os.path.relpath(r'../data/task_list.txt')
-
-    with open(f'{path}', 'r') as json_list:
-        task_list = json.load(json_list)
-        data = task_list['task list']
-
-    print(data)
-
-    with DatabaseHandler() as train_db:
-        # for num, item in enumerate(data):
-        #     for key in item:
-        #         print(num, key, item[key])
-        #         train_db.insert("tasks", key, item[key])
-        train_db.select('tasks')
-        rows = train_db.cur.fetchall()
-        print(rows)
-        train_db.update('tasks', 'Clean up the mess', 'Clean up', 'You should clean up your kitchen!')
-        train_db.transfer_data_between_tables('tasks', 'archive', 'Clean up')

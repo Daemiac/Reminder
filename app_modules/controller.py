@@ -3,18 +3,17 @@ import logging
 
 from PyQt5.QtCore import QTimer, QTime
 
-from app_modules.views import AppView, AddDialog
+from app_modules.views import AddDialog
 from app_modules.models import TaskListModel, MotivationalQuoteModel
-from app_modules.db_handler import DatabaseHandler
 
 logger = logging.getLogger(__name__)
 
 
 class AppController:
     """ Mediates between model and view objects """
-    def __init__(self, view, model):
+    def __init__(self, view):
         self._view = view
-        self._model = model
+        self._model = TaskListModel()
         self._mot_model = MotivationalQuoteModel()
         self._timer = None
         self._dialog = None

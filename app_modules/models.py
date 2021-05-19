@@ -2,7 +2,6 @@ import random
 import logging
 import requests
 import json
-import os
 import datetime
 
 from app_modules.db_handler import DatabaseHandler
@@ -11,7 +10,6 @@ logger = logging.getLogger(__name__)
 
 
 class TaskListModel:
-    # TODO comment functionalities of this class
     def __init__(self):
         self.task_list = None
         self.db = None
@@ -67,7 +65,7 @@ class MotivationalQuoteModel:
                 while not self.is_quote_valid():
                     self.quote = random.choice(data)
         except (requests.ConnectionError, requests.Timeout):
-            print("Connection couldnt be done...")
+            logger.exception("Connection couldn't be established...", exc_info=True)
             self.get_quote_from_file()
 
     def get_quote_from_file(self):
@@ -81,8 +79,10 @@ class MotivationalQuoteModel:
     def is_quote_valid(self):
         """ Checks if quote's text length isn't bigger than 85 characters """
         if len(self.quote["text"]) > 85:
+            logger.debug("Text too long to be displayed, trying again...")
             return False
         else:
             if self.quote["author"] is None or self.quote["author"] == "" or self.quote["author"] == "null":
+                logger.debug("Author data doesn't exist, setting it to 'Unknown'... ")
                 self.quote['author'] = 'Unknown'
             return True
