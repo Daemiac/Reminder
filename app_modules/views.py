@@ -367,8 +367,7 @@ class BottomWidget(QWidget):
             self.mot_quote.setText(quote_dic["text"] + " - " + quote_dic["author"])
 
         except TypeError:
-            print(type(quote_dic["text"]))
-            print(type(quote_dic["author"]))
+            logger.exception("An error has occured during updating a metovational quote!", exc_info=True)
 
 
 class AddDialog(QDialog):

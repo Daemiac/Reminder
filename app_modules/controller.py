@@ -102,17 +102,17 @@ class AppController:
             self._model.add_task_to_db(new_task_name, new_task_details, new_task_deadline)
             self.update_task_list()
             self._dialog.close()
-            print("Dialog form has been accepted. The task has been added. Closing the dialog window...")
+            logger.debug("Dialog form has been accepted, closing the dialog window...")
         else:
             self._model.update_task_data(self.clicked_task, new_task_name, new_task_details, new_task_deadline)
             self.update_task_list()
             self._dialog.close()
-            print("Dialog form has been accepted. Chosen task details has been changed. Closing the dialog window...")
+            logger.debug("Dialog form has been accepted, closing the dialog window...")
 
     def reject_dialog(self):
         """ Closes dialog window without applying changes """
         self._dialog.close()
-        print("Dialog form has been rejected. Closing the dialog window...")
+        logger.info("Dialog form has been rejected.")
 
     def delete_task(self):
         """ Method responsible for deleting a task from model's task list attribute and updating
