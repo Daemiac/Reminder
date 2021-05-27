@@ -86,3 +86,20 @@ class MotivationalQuoteModel:
                 logger.debug("Author data doesn't exist, setting it to 'Unknown'... ")
                 self.quote['author'] = 'Unknown'
             return True
+
+
+class Archive:
+    def __init__(self):
+        self.archived_tasks = None
+        self.db = None
+
+    def retrieve_tasks_from_db(self):
+        with DatabaseHandler() as self.db:
+            self.db.create_table('archive')
+            self.db.select('archive')
+            self.archived_tasks = self.db.cur.fetchall()
+            print(self.archived_tasks)
+
+    def dump_archive(self):
+        with DatabaseHandler() as self.db:
+            self.db.drop_table('archive')

@@ -4,7 +4,7 @@ import logging
 from PyQt5.QtCore import QTimer, QTime
 
 from app_modules.views import AddDialog
-from app_modules.models import TaskListModel, MotivationalQuoteModel
+from app_modules.models import TaskListModel, MotivationalQuoteModel, Archive
 
 logger = logging.getLogger(__name__)
 
@@ -15,6 +15,7 @@ class AppController:
         self._view = view
         self._model = TaskListModel()
         self._mot_model = MotivationalQuoteModel()
+        self._archive = Archive()
         self._timer = None
         self._dialog = None
 
@@ -119,14 +120,12 @@ class AppController:
             task list widget's view """
         item_to_delete = self.clicked_task
         self._model.archive_task(item_to_delete)
+        self._archive.retrieve_tasks_from_db()
         self.update_task_list()
         self._view.tab_widget.task_info_widget.update_quest_info(f"The '{item_to_delete}' task has been deleted!")
 
     @staticmethod
     def _close_the_app():
         """ Saves changes into external file and closes the app """
-        # with DatabaseHandler() as db:
-        #     db.drop_table('archive')
-        #     db.drop_table('tasks')
         logger.info("Shutting down the app...")
         sys.exit()

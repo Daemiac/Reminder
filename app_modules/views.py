@@ -156,7 +156,8 @@ class TabWidget(QWidget):
         pass
 
     def set_archive_tab_layout(self):
-        pass
+        self.archive_tab_layout = QHBoxLayout()
+
 
     def set_widgets_layout(self):
         self.main_layout.addWidget(self.tabs)
