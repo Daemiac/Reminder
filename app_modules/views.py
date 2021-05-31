@@ -1,7 +1,7 @@
 import datetime
 import logging
 
-from PyQt5 import QtWidgets
+from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import (
     QMainWindow,
     QDialog,
@@ -157,7 +157,6 @@ class TabWidget(QWidget):
 
     def set_archive_tab_layout(self):
         self.archive_tab_layout = QHBoxLayout()
-
 
     def set_widgets_layout(self):
         self.main_layout.addWidget(self.tabs)
@@ -404,7 +403,7 @@ class AddDialog(QDialog):
         self.task_details_layout = None
         self.task_deadline_group_box = None
         self.task_deadline_label = None
-        self.task_deadline_edit = None
+        self.deadline_edit = None
         self.task_deadline_layout = None
         self.save_button = None
         self.cancel_button = None
@@ -466,16 +465,17 @@ class AddDialog(QDialog):
         self.task_deadline_label = QtWidgets.QLabel("Add deadline date")
         self.task_deadline_label.setObjectName("task_deadline_label")
 
-        self.task_deadline_edit = QtWidgets.QLineEdit("Deadline in day-month-year format")
-        self.task_deadline_edit.setObjectName("task_deadline_edit")
-        self.task_deadline_edit.setMaxLength(35)
+        self.deadline_edit = QtWidgets.QDateEdit(calendarPopup=True)
+        self.deadline_edit.setObjectName("task_deadline_edit")
+        self.deadline_edit.setDateTime(QtCore.QDateTime.currentDateTime())
 
         self.set_task_deadline_group_box_layout()
 
     def set_task_deadline_group_box_layout(self):
-        self.task_deadline_layout = QVBoxLayout()
+        self.task_deadline_layout = QHBoxLayout()
         self.task_deadline_layout.addWidget(self.task_deadline_label)
-        self.task_deadline_layout.addWidget(self.task_deadline_edit)
+        self.task_deadline_layout.addWidget(self.deadline_edit)
+
         self.task_deadline_group_box.setLayout(self.task_deadline_layout)
 
     def create_dialog_buttons(self):

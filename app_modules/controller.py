@@ -83,7 +83,9 @@ class AppController:
 
     def add_task_window(self):
         """ Creates a dialog window which can be used to add a task """
+        logger.debug("Trying to create addialog instance")
         self._dialog = AddDialog.create_add_dialog()
+        logger.debug("Created addialog instance")
         self._connect_dialog_signals()
         self._dialog.show()
 

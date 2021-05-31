@@ -304,7 +304,7 @@ dialog_style_sheet = """
 
 #task_deadline_group_box{
     margin-bottom: 5px;
-    padding-bottom: 10px;
+    padding-bottom: 5px;
     background-color: #3a3b3c;
     border-radius: 10;
 }
