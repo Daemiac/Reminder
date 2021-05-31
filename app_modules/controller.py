@@ -100,7 +100,7 @@ class AppController:
         """ Saves dialog window's entries to model's attribute, updates the view and closes dialog window """
         new_task_name = self._dialog.task_title_edit.text()
         new_task_details = self._dialog.task_details_edit.toPlainText()
-        new_task_deadline = self._dialog.task_deadline_edit.text()
+        new_task_deadline = self._dialog.deadline_edit.text()
         if self._dialog.mode:
             self._model.add_task_to_db(new_task_name, new_task_details, new_task_deadline)
             self.update_task_list()
@@ -129,5 +129,6 @@ class AppController:
     @staticmethod
     def _close_the_app():
         """ Saves changes into external file and closes the app """
+        #self._archive.dump_archive()
         logger.info("Shutting down the app...")
         sys.exit()

@@ -465,7 +465,8 @@ class AddDialog(QDialog):
         self.task_deadline_label = QtWidgets.QLabel("Add deadline date")
         self.task_deadline_label.setObjectName("task_deadline_label")
 
-        self.deadline_edit = QtWidgets.QDateEdit(calendarPopup=True)
+        self.deadline_edit = QtWidgets.QDateEdit()
+        self.deadline_edit.setCalendarPopup(True)
         self.deadline_edit.setObjectName("task_deadline_edit")
         self.deadline_edit.setDateTime(QtCore.QDateTime.currentDateTime())
 

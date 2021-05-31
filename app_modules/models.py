@@ -27,7 +27,7 @@ class TaskListModel:
     def add_task_to_db(self, task, details, deadline):
         logger.debug('Tryout of addition of a "%s" task to database', task)
         with DatabaseHandler() as self.db:
-            self.db.insert('tasks', task, details, self.task_addition_date.strftime("%d-%m-%Y"), deadline)
+            self.db.insert('tasks', task, details, self.task_addition_date.strftime("%d.%m.%Y"), deadline)
             logger.info('Task "%s" successfully added to a database', task)
 
     def update_task_data(self, task_name, new_task_name, new_details, new_deadline):
