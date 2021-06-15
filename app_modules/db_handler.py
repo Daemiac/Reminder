@@ -1,15 +1,18 @@
 import sqlite3
 import os
 import logging
+from dotenv import load_dotenv
 
 logger = logging.getLogger(__name__)
 
-LOCATION_CONSTANT = os.path.relpath(r'data/app_data.sqlite')
+load_dotenv(r'D:\Programy do nauki\Projekty Python\Reminder\.env')
+
+DB_LOCATION = os.getenv("DB_LOCATION")
 
 
 class DatabaseHandler:
     #TODO Remodeling this class to be more redundant
-    __DB_LOCATION = LOCATION_CONSTANT
+    __DB_LOCATION = DB_LOCATION
 
     def __init__(self, db_location=None):
         """ Initialize db class variables """
