@@ -3,16 +3,16 @@ import os
 import logging
 from dotenv import load_dotenv
 
+ENV_LOCATION = os.path.relpath(r'.env')
+
 logger = logging.getLogger(__name__)
 
-load_dotenv(r'D:\Programy do nauki\Projekty Python\Reminder\.env')
-
-DB_LOCATION = os.getenv("DB_LOCATION")
+load_dotenv(ENV_LOCATION)
 
 
 class DatabaseHandler:
     #TODO Remodeling this class to be more redundant
-    __DB_LOCATION = DB_LOCATION
+    __DB_LOCATION = os.getenv('DB_LOCATION')
 
     def __init__(self, db_location=None):
         """ Initialize db class variables """
